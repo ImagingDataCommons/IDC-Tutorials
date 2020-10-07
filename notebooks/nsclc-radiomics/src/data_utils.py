@@ -8,7 +8,7 @@
     ----------------------------------------
     Author: Dennis Bontempi
     Email:  dennis_bontempi@dfci.harvard.edu
-    Modified: 01 OCT 20
+    Modified: 07 OCT 20
     ----------------------------------------
     
 """
@@ -18,6 +18,8 @@ import json
 import pydicom
 import numpy as np
 import SimpleITK as sitk
+
+import subprocess
 
 ## ----------------------------------------
 
@@ -233,3 +235,218 @@ def get_input_volume(input_ct_nrrd_path):
   """
   
   return ct_nrdd_norm_crop
+  
+  
+## ----------------------------------------
+## ----------------------------------------
+
+def export_res_nrrd_from_dicom(dicom_ct_path, dicom_rt_path, output_dir, pat_id,
+                               ct_interpolation = 'linear', output_dtype = "int"):
+  
+  """
+  Convert DICOM CT and RTSTRUCT sequences to NRRD files and resample to 1-mm isotropic
+  exploiting plastimatch (direct call, bash-like).
+  
+  @params:
+    dicom_ct_path - required :
+    dicom_rt_path - required :
+    output_dir    - required : 
+    pat_id       - required :
+    output_dtype  - optional : 
+    
+  @returns:
+    out_log : 
+    
+  """
+  
+  out_log = dict()
+  
+  # temporary nrrd files path (DICOM to NRRD, no resampling)
+  ct_nrrd_path = os.path.join(output_dir, 'tmp_ct_orig.nrrd')
+  rt_folder = os.path.join(output_dir, pat_id  + '_whole_ct_rt')
+  
+  # log the labels of the exported segmasks
+  rt_struct_list_path = os.path.join(output_dir, pat_id + '_rt_list.txt')
+  
+  # convert DICOM CT to NRRD file - no resampling
+  bash_command = list()
+  bash_command += ["plastimatch", "convert"]
+  bash_command += ["--input", dicom_ct_path]
+  bash_command += ["--output-img", ct_nrrd_path]
+                   
+  # print progress info
+  print("Converting DICOM CT to NRRD using plastimatch... ", end = '')
+  out_log['dcm_ct_to_nrrd'] = subprocess.call(bash_command)
+  print("Done.")
+  
+  
+  # convert DICOM RTSTRUCT to NRRD file - no resampling
+  bash_command = list()
+  bash_command += ["plastimatch", "convert"]
+  bash_command += ["--input", dicom_rt_path]
+  bash_command += ["--referenced-ct", dicom_ct_path]
+  bash_command += ["--output-prefix", rt_folder]
+  bash_command += ["--prefix-format", 'nrrd']
+  bash_command += ["--output-ss-list", rt_struct_list_path]
+  
+  # print progress info
+  print("Converting DICOM RTSTRUCT to NRRD using plastimatch... ", end = '')
+  out_log['dcm_rt_to_nrrd'] = subprocess.call(bash_command)
+  print("Done.")
+  
+  # look for the labelmap for GTV
+  gtv_rt_file = [f for f in os.listdir(rt_folder) if 'gtv-1' in f.lower()][0]
+  rt_nrrd_path = os.path.join(rt_folder, gtv_rt_file)
+  
+  ## ----------------------------------------
+  
+  # actual nrrd files path 
+  res_ct_nrrd_path = os.path.join(output_dir, pat_id + '_ct_resampled.nrrd')
+  res_rt_nrrd_path = os.path.join(output_dir, pat_id + '_rt_resampled.nrrd')
+  
+  # resample the NRRD CT file to 1mm isotropic
+  bash_command = list()
+  bash_command += ["plastimatch", "resample"]
+  bash_command += ["--input", ct_nrrd_path]
+  bash_command += ["--output", res_ct_nrrd_path]
+  bash_command += ["--spacing", "1 1 1"]
+  bash_command += ["--interpolation", ct_interpolation]
+  bash_command += ["--output-type", output_dtype]
+  
+  # print progress info
+  print("\nResampling NRRD CT to 1mm isotropic using plastimatch... ", end = '')
+  out_log['dcm_nrrd_ct_resampling'] = subprocess.call(bash_command)
+  print("Done.")
+  
+  # FIXME: log informations about the native volume
+  #out_log["shape_original"] = list(tmp.)
+  
+  
+  # resample the NRRD RTSTRUCT file to 1mm isotropic
+  bash_command = list()
+  bash_command += ["plastimatch", "resample"]
+  bash_command += ["--input", rt_nrrd_path]
+  bash_command += ["--output", res_rt_nrrd_path]
+  bash_command += ["--spacing", "1 1 1"]
+  bash_command += ["--interpolation", "nn"]
+    
+  # print progress info
+  print("Resampling NRRD RTSTRUCT to 1mm isotropic using plastimatch... ", end = '')
+  out_log['dcm_nrrd_rt_resampling'] = subprocess.call(bash_command)
+  print("Done.")
+
+  
+  # clean up
+  print("\nRemoving temporary files (DICOM to NRRD, non-resampled)... ", end = '')
+  os.remove(ct_nrrd_path)
+  # FIXME: keep the RTSTRUCTs (latest LUNG1 has multiple structures --> additional checks afterwards)?
+  #os.remove(rt_nrrd_path)
+  print("Done.")
+  
+
+  return out_log
+
+
+## ----------------------------------------
+## ----------------------------------------
+
+def export_com_subvolume(ct_nrrd_path, rt_nrrd_path, crop_size, output_dir, pat_id,
+                         z_first = True, rm_orig = False):
+
+  """
+  Main reason: save space
+  
+  Use plastimatch so that we don't need to load and then write NRRD through python (pynrrd)
+  
+  """
+  
+  # sanity check
+  assert(os.path.exists(ct_nrrd_path))
+  assert(os.path.exists(rt_nrrd_path))
+  
+  sitk_seg = sitk.ReadImage(rt_nrrd_path)
+  seg = sitk.GetArrayFromImage(sitk_seg)
+  
+  # output dictionary contains info regarding CoM and the cropping op.s
+  out_log = dict()
+    
+  com = compute_center_of_mass(input_mask = seg)
+  com_int = [int(coord) for coord in com]
+  
+  out_log["com"] = com
+  out_log["com_int"] = com_int
+  
+  # if CoM calculation goes wrong, abort returning the out_log so far
+  if sum(com_int) < 0:
+    print('WARNING: CoM calculation resulted in an error, aborting... ')
+    return out_log
+  
+  # otherwise go on with the processing and the cropping
+  bbox = get_bbox_dict(com_int, seg_mask_shape = seg.shape, bbox_size = crop_size)
+  
+  # make sure no bounding box exceeds the dimension of the volume
+  # (should be taken care of already in the get_bbox_dict() function)
+  cor_idx = 1
+  lon_idx = 0 if z_first else 2
+  sag_idx = 2 if z_first else 0 
+  
+  # less and not leq at the second term --> the last slice of the volume is seg.shape[...] - 1
+  assert(bbox['sag']['first'] >= 0 and bbox['sag']['last'] < seg.shape[sag_idx])
+  assert(bbox['cor']['first'] >= 0 and bbox['cor']['last'] < seg.shape[cor_idx])
+  assert(bbox['lon']['first'] >= 0 and bbox['lon']['last'] < seg.shape[lon_idx])
+  
+  
+  # cropped nrrd files path
+  ct_nrrd_crop_path = os.path.join(output_dir, pat_id + '_ct_res_crop.nrrd')
+  rt_nrrd_crop_path = os.path.join(output_dir, pat_id + '_rt_res_crop.nrrd')
+  
+  if z_first:
+    xmin = str(bbox["sag"]["first"]); xmax = str(bbox["sag"]["last"])
+    ymin = str(bbox["cor"]["first"]); ymax = str(bbox["cor"]["last"])
+    zmin = str(bbox["lon"]["first"]); zmax = str(bbox["lon"]["last"])
+  else:
+    xmin = str(bbox["lon"]["first"]); xmax = str(bbox["lon"]["last"])
+    ymin = str(bbox["cor"]["first"]); ymax = str(bbox["cor"]["last"])
+    zmin = str(bbox["sag"]["first"]); zmax = str(bbox["sag"]["last"])
+    
+  
+  # crop the NRRD CT file to the crop_size subvolume
+  bash_command = list()
+  bash_command += ["plastimatch", "crop"]
+  bash_command += ["--input", ct_nrrd_path]
+  bash_command += ["--output", ct_nrrd_crop_path]
+  bash_command += ["--voxels", "%s %s %s %s %s %s"%(xmin, xmax, ymin, ymax, zmin, zmax)]
+
+  # print progress info
+  print("\nCropping the resampled NRRD CT to bbox using plastimatch... ", end = '')
+  out_log['dcm_nrrd_ct_cropping'] = subprocess.call(bash_command)
+  print("Done.")
+  
+  
+  # crop the NRRD RT file to the crop_size subvolume
+  bash_command = list()
+  bash_command += ["plastimatch", "crop"]
+  bash_command += ["--input", rt_nrrd_path]
+  bash_command += ["--output", rt_nrrd_crop_path]
+  bash_command += ["--voxels", "%s %s %s %s %s %s"%(xmin, xmax, ymin, ymax, zmin, zmax)]
+    
+  # print progress info
+  print("Cropping the resampled NRRD RTSTRUCT to bbox using plastimatch... ", end = '')
+  out_log['dcm_nrrd_rt_cropping'] = subprocess.call(bash_command)
+  print("Done.")
+  
+  # log some useful information about the cropping
+  log_file_path = os.path.join(output_dir, pat_id + '_crop_log.json')
+  with open(log_file_path, 'w') as json_file:
+    json.dump(bbox, json_file, indent = 2)
+  
+  if rm_orig:
+    # clean up
+    print("\nRemoving the resampled NRRD files... ", end = '')
+    os.remove(ct_nrrd_path)
+    os.remove(rt_nrrd_path)
+    print("Done.")
+  
+  return out_log
+  
+  
