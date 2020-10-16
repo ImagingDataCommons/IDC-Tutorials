@@ -1,13 +1,13 @@
-# Imaging Data Commons - Radiomics Use Case <br>(Colab Demo)
+# Imaging Data Commons - Radiomics Use Case <br>(Colab Demo - WIP)
 
 *Curated by Dennis Bontempi and Andrey Fedorov*
 
-This repository hosts the demo for *Hosny et Al. - Deep learning for lung cancer prognostication: A retrospective multi-cohort radiomics study*, replicated using the tools provided by the Imaging Data Commons.
+This repository hosts the demo for *Hosny et Al. - Deep learning for lung cancer prognostication: A retrospective multi-cohort radiomics study*, reproduced using the tools provided by the Imaging Data Commons.
 
 
-The demo notebook can be accessed :point_right: [here](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/nsclc-radiomics/nsclc_radiomics_demo.ipynb) :point_left:
+<center>[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/nsclc-radiomics/nsclc_radiomics_demo.ipynb)</center>
 
-Clicking on the link above will spawn a new Colab session, loading automatically the latest version of the demo notebook. Additional information about the Colab-GitHub integration can be found in [this Colab Notebook](https://colab.research.google.com/github/googlecolab/colabtools/blob/master/notebooks/colab-github-demo.ipynb#scrollTo=WzIRIt9d2huC).
+Clicking on the badge above will spawn a new Colab session, loading automatically the latest version of the demo notebook. Additional information about the Colab-GitHub integration can be found in [this Colab Notebook](https://colab.research.google.com/github/googlecolab/colabtools/blob/master/notebooks/colab-github-demo.ipynb#scrollTo=WzIRIt9d2huC).
 
 ## Abstract
 
