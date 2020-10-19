@@ -2,7 +2,7 @@
 
 *Curated by Dennis Bontempi and Andrey Fedorov*
 
-This repository hosts the demo for *Hosny et Al. - Deep learning for lung cancer prognostication: A retrospective multi-cohort radiomics study*, reproduced using the tools provided by the Imaging Data Commons.
+This repository hosts the demo for *Hosny et Al. - [Deep learning for lung cancer prognostication: A retrospective multi-cohort radiomics study](https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002711)*, reproduced using the tools provided by the Imaging Data Commons.
 
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/nsclc-radiomics/nsclc_radiomics_demo.ipynb)
