@@ -1,0 +1,6 @@
+SimpleITK
+pydicom
+matplotlib
+seaborn
+pandas
+numpy
