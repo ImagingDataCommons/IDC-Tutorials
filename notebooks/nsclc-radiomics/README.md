@@ -1,4 +1,4 @@
-# Imaging Data Commons - Radiomics Use Case <br>(Colab Demo - WIP)
+# Imaging Data Commons - Imaging Analysis Use Case
 
 *Curated by Dennis Bontempi and Andrey Fedorov*
 
