@@ -251,7 +251,7 @@ def export_res_nrrd_from_dicom(dicom_ct_path, dicom_rt_path, output_dir, pat_id,
     dicom_ct_path - required :
     dicom_rt_path - required :
     output_dir    - required : 
-    pat_id       - required :
+    pat_id        - required :
     output_dtype  - optional : 
     
   @returns:
