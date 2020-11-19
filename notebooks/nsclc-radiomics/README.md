@@ -12,7 +12,7 @@ This repository hosts the demo for *Hosny et Al. - [Deep learning for lung cance
 
 Clicking on the badge above will spawn a new Colab session, loading automatically the latest version of the demo notebook. Additional information about the Colab-GitHub integration can be found in [this Colab Notebook](https://colab.research.google.com/github/googlecolab/colabtools/blob/master/notebooks/colab-github-demo.ipynb#scrollTo=WzIRIt9d2huC).
 
-This use case was discussed on November 16 at the 2020 IDC for NCI imaging informatics webinar. You can find the [full set of slides at this link](https://docs.google.com/presentation/d/1nLApywpt4jBb4j6pKzTsXRRxcfi9VsqVPbYMvHHE5G0/edit?usp=sharing).
+This use case was discussed on November 16 at the 2020 IDC for NCI imaging informatics webinar. The recorded event can be watched [here](https://www.youtube.com/watch?v=RUBKZoWNTfc), and the full set of slides is found [at this link](https://docs.google.com/presentation/d/1nLApywpt4jBb4j6pKzTsXRRxcfi9VsqVPbYMvHHE5G0/edit?usp=sharing).
 
 ## Paper Abstract
 
