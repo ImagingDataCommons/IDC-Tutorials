@@ -8,7 +8,7 @@ This repository hosts the demo for *Hosny et Al. - [Deep learning for lung cance
 
 ![Graphical Abstract](https://github.com/ImagingDataCommons/IDC-Examples/blob/master/notebooks/nsclc-radiomics/assets/overview.png)
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/nsclc-radiomics/nsclc_radiomics_demo.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/nsclc-radiomics/nsclc_radiomics_demo_release.ipynb)
 
 Clicking on the badge above will spawn a new Colab session, loading automatically the latest version of the demo notebook. Additional information about the Colab-GitHub integration can be found in [this Colab Notebook](https://colab.research.google.com/github/googlecolab/colabtools/blob/master/notebooks/colab-github-demo.ipynb#scrollTo=WzIRIt9d2huC).
 
