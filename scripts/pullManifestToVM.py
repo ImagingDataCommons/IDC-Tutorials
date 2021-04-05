@@ -319,15 +319,15 @@ Run a timing test
 
 def timing_test(args):
 
-    NUM = 20000
-    TABLE = 'your-project-id.your-dataset.your-manifest-table' # BQ table with your manifest
+    NUM = 2000
+    TABLE = 'your-project-id.your-dataset.your-manifest-table'
     AUX_TABLE = 'canceridc-data.idc.auxilliary_metadata'
-    MANIFEST_FILE = '/path-to-your-home-dir/BQ-MANIFEST.txt' # Where will manifest file go
-    PATHS_TSV_FILE = '/path-to-your-home-dir/PATHS.tsv' # Where will path file go
-    TARG_DIR = '/path-to-your-home-dir/black_hole' # Since we are testing, stuff gets deleted after download
-    PAYING = 'your-project-id' # Needed for requester pays though it is free to crossload to a VM
-    THREADS = 16 # 2 * number of cpus seems to work best
-    TEST_MODE = True # Files deleted after download, so timing tests do not need lots of VM memory
+    MANIFEST_FILE = '/path-to-your-home-dir/BQ-MANIFEST.txt'
+    PATHS_TSV_FILE = '/path-to-your-home-dir/PATHS.tsv'
+    TARG_DIR = '/path-to-your-home-dir/black_hole'
+    PAYING = 'your-project-id'
+    THREADS = 16
+    TEST_MODE = True
 
     print_time()
     pull_manifest(NUM, TABLE, MANIFEST_FILE)
@@ -346,19 +346,29 @@ Pull files to disk
 '''
 def main(args):
 
-    NUM = None  # Don't chop off the table if you are not just testing...
-    TABLE = 'your-project-id.your-dataset.your-manifest-table' # BQ table with your manifest
+    #
+    # Should not need changing:
+    #
+
     AUX_TABLE = 'canceridc-data.idc.auxilliary_metadata'
-    MANIFEST_FILE = '/path-to-your-home-dir/BQ-MANIFEST.txt' # Where will manifest file go
-    PATHS_TSV_FILE = '/path-to-your-home-dir/PATHS.tsv' # Where will path file go
-    # With IDC data version 1, DICOM files live in a bucket with a hierarchical structure, so
-    # this directory will be filled with subdirectories of studies which hold subdirectories
-    # of series. Starting IDC data verion 2, buckets will be flat, and additional information
-    # will be needed to build the hierarchy. Stay tuned:
-    TARG_DIR = '/path-to-your-home-dir/destination'
-    PAYING = 'your-project-id'  # Needed for requester pays though it is free to crossload to a VM
-    THREADS = 16 # 2 * number of cpus seems to work best
+
+    #
+    # For testing only. Best to keep the same:
+    #
+
     TEST_MODE = False # If set to true, will delete files after it downloaded (timing test only!)
+    NUM = None  # Don't chop off the table if you are not just testing...
+
+    #
+    # Customize these settings:
+    #
+
+    TABLE = 'your-project-id.your-dataset.your-manifest-table' # BQ table with your manifest
+    MANIFEST_FILE = '/path-to-your-home-dir/BQ-MANIFEST.txt' # Where will the manifest file go
+    PATHS_TSV_FILE = '/path-to-your-home-dir/PATHS.tsv' # Where will the path file go
+    TARG_DIR = '/path-to-your-home-dir/destination' # Has to be on a filesystem with enough sapce
+    PAYING = 'your-project-id' # Needed for requester pays though it is free to crossload to a cloud VM
+    THREADS = 16 # 2 * number of cpus seems to work best
 
     #
     # Get the manifest out of BigQuery into a local file:
