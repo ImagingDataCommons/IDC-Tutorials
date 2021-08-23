@@ -1,7 +1,24 @@
 # IDC-Examples/notebooks
 The **notebooks** subdirectory of this repository contains a series of IPython notebooks that are intended to help you get started working with IDC hosted data.
 
+## Data Download and Exploration
+
+The following notebooks contain examples of how to download and explore IDC cohorts:
+
 * LIDC exploration [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/LIDC_exploration.ipynb)
 * Cohort download [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/Cohort_download.ipynb)
-* DeepPrognosis use case [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/nsclc-radiomics/nsclc_radiomics_demo_release.ipynb)
+
+## Imaging Analysis AI
+
+The following notebooks contain examples of how IDC can be used to run AI-based medical imaging analysis pipelines on the cloud:
+
+* DeepPrognosis use case - replication study, 2 year survival score of NSCLC patients [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/nsclc-radiomics/nsclc_radiomics_demo_release.ipynb)
+* Lung Nodules segmentation and prognosis use case - NSCLC patients nodules segmentation (nnU-Net) and prognosis (DeepPrognosis) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/lung_nodules_demo.ipynb)
+* Thoracic Organs at Risk segmentation use case - NSCLC patients thoracic OAR segmentation (nnU-Net) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/thoracic_oar_demo.ipynb)
+
+**N.B.**: since these demonstrations run in Google Colab, they highlight only a small part of what IDC can offer in terms of computational capability for imaging analysis. A more comprehensive experience of such tools can be explored, e.g., by experimenting with GCP Virtual Machines.
+
+To learn more about how to access the GCP virtual machines for free (exploiting GCP and/or IDC [free cloud credits](https://learn.canceridc.dev/introduction/requesting-gcp-cloud-credits)), please visit the [IDC user guide](https://learn.canceridc.dev/). 
+
+
 
