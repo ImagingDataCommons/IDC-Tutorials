@@ -8,7 +8,7 @@ The following notebooks contain examples of how to download and explore IDC coho
 * LIDC exploration [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/LIDC_exploration.ipynb)
 * Cohort download [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/Cohort_download.ipynb)
 
-Furthermore, the Cohort Preparation notebook [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/cohort_preparation.ipynb) contains a simple tutorial on how to get a cohort ready for your any image processing applications (e.g., best practices for the conversion from DICOM to NRRD and NIfTI, pointers to pre-processing utilities).
+Furthermore, the Cohort Preparation notebook [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/cohort_preparation.ipynb) contains a simple tutorial on how to get a cohort ready for your image processing applications (e.g., best practices for the conversion from DICOM to NRRD and NIfTI, pointers to pre-processing utilities).
 
 
 ## Imaging Analysis AI
