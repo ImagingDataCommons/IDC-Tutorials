@@ -17,9 +17,13 @@
 export MY_VENV=~/pyVenvForThree
 export PYTHONPATH=.:${MY_VENV}/lib
 
+TABLE='your-project-id.your-dataset.your-manifest-table' # BQ table with your manifest
+TARG_DIR='/path-to-your-home-dir/destination' # Has to be on a filesystem with enough sapce
+PAYING='your-project-id' # Needed for requester pays though it is free to crossload to a cloud VM
+
 cd ~
 pushd ${MY_VENV} > /dev/null
 source bin/activate
 popd > /dev/null
-python3 ~/IDC-Examples/scripts/pullManifestToVM.py
+python3 ~/IDC-Examples/scripts/pullManifestToVM.py --table ${TABLE} --destination ${TARG_DIR} --paying ${PAYING}
 deactivate
