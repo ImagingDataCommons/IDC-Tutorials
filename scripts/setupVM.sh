@@ -18,7 +18,7 @@
 # Setup the VM for the manifest script, if it is new:
 #
 
-if [ -d "${HOME}/pyVenvForThree" ]; then
+if [ ! -d "${HOME}/pyVenvForThree" ]; then
 
     sudo apt-get update
     sudo apt-get upgrade -y
