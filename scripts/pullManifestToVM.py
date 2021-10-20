@@ -26,6 +26,17 @@ import shutil
 import csv
 from datetime import datetime
 import urllib.parse as up
+import argparse
+import tempfile
+import os
+import logging
+from hurry.filesize import size
+import tqdm
+
+logger = logging.getLogger("pullManifestToVM")
+logger.setLevel(logging.DEBUG)
+console_handler = logging.StreamHandler()
+logging.getLogger("pullManifestToVM").addHandler(console_handler)
 
 '''
 A key part of working in the cloud is pulling the file manifest for a cohort out of a BigQuery table onto
@@ -69,17 +80,17 @@ class BucketPuller(object):
         self._total_files = len(pull_list)
         self._bar_bump = self._total_files // 100
         # Build the paths dict:
-        print("Bulding the paths dict")
+        logger.info("Bulding the paths dict")
         self._paths_dict = {}
         with open(paths_tsv, 'rt') as path_file:
             tsv_reader = csv.reader(path_file, delimiter='\t')
             for row in tsv_reader:
                 self._paths_dict[row[0]] = row[1]
-        print("Done")
-
+        logger.info("Done")
         if self._bar_bump == 0:
             self._bar_bump = 1
         size = self._total_files // self._thread_count
+        self._pb = tqdm.tqdm(total=self._total_files)
         size = size if self._total_files % self._thread_count == 0 else size + 1
         chunks = [pull_list[pos:pos + size] for pos in range(0, self._total_files, size)]
         for i in range(0, self._thread_count):
@@ -94,7 +105,6 @@ class BucketPuller(object):
         for i in range(0, len(self._threads)):
             self._threads[i].join()
 
-        print("Done")
         return self._total_bytes
 
     def _pull_func(self, pull_list, local_files_dir):
@@ -129,39 +139,7 @@ class BucketPuller(object):
         with self._lock:
             self._total_bytes += size
             self._read_files += 1
-            if (self._read_files % self._bar_bump) == 0:
-                print_progress_bar(self._read_files, self._total_files)
-
-
-'''
-----------------------------------------------------------------------------------------------
-Print a progress bar
-'''
-
-def print_progress_bar(iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█'):
-    """
-    Ripped from Stack Overflow.
-    https://stackoverflow.com/questions/3173320/text-progress-bar-in-the-console
-    H/T to Greenstick: https://stackoverflow.com/users/2206251/greenstick
-
-    Call in a loop to create terminal progress bar
-    @params:
-        iteration   - Required  : current iteration (Int)
-        total       - Required  : total iterations (Int)
-        prefix      - Optional  : prefix string (Str)
-        suffix      - Optional  : suffix string (Str)
-        decimals    - Optional  : positive number of decimals in percent complete (Int)
-        length      - Optional  : character length of bar (Int)
-        fill        - Optional  : bar fill character (Str)
-    """
-    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
-    filled_length = int(length * iteration // total)
-    bar = fill * filled_length + '-' * (length - filled_length)
-    print('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix), end='\r')
-    # Print New Line on Complete
-    if iteration == total:
-        print()
-    return
+            self._pb.update(1)
 
 '''
 ----------------------------------------------------------------------------------------------
@@ -180,21 +158,22 @@ def bq_harness_with_result(sql, do_batch):
     location = 'US'
 
     # API request - starts the query
+    logger.debug("Running query: %s" % sql)
     query_job = client.query(sql, location=location, job_config=job_config)
 
     # Query
     job_state = 'NOT_STARTED'
     while job_state != 'DONE':
         query_job = client.get_job(query_job.job_id, location=location)
-        print('Job {} is currently in state {}'.format(query_job.job_id, query_job.state))
+        logger.debug('Job {} is currently in state {}'.format(query_job.job_id, query_job.state))
         job_state = query_job.state
         if job_state != 'DONE':
             time.sleep(5)
-    print('Job {} is done'.format(query_job.job_id))
+    logger.debug('Job {} is done'.format(query_job.job_id))
 
     query_job = client.get_job(query_job.job_id, location=location)
     if query_job.error_result is not None:
-        print('Error result!! {}'.format(query_job.error_result))
+        logger.critical('Error result!! {}'.format(query_job.error_result))
         return None
 
     results = query_job.result()
@@ -211,7 +190,7 @@ def get_loading_size(manifest_file, paying_project, threads):
 
     with open(manifest_file, mode='r') as pull_list_file:
         pull_list = pull_list_file.read().splitlines()
-        print("Preparing to check size of %s files f\n" % len(pull_list))
+        logger.info("Preparing to check size of %s files f\n" % len(pull_list))
         bp = BucketPuller(paying_project, threads, True, size_only=True)
         total_size = bp.pull_from_buckets(pull_list, None, None)
     return total_size
@@ -275,7 +254,7 @@ def build_paths(manifest_table, aux_table, path_tsv_file):
             '''.format(aux_table, manifest_table)
 
     results = bq_harness_with_result(query, False)
-    print("Bulding the paths file")
+    logger.info("Bulding the paths file")
     with open(path_tsv_file, 'wt') as out_file:
         tsv_writer = csv.writer(out_file, delimiter='\t')
         for row in results:
@@ -283,7 +262,7 @@ def build_paths(manifest_table, aux_table, path_tsv_file):
             path = "%s/%s/%s.dcm" % (row.StudyInstanceUID, row.SeriesInstanceUID, row.SOPInstanceUID)
             tsv_array = [gu, path]
             tsv_writer.writerow(tsv_array)
-    print("Done")
+    logger.info("Done")
 
     return
 
@@ -296,7 +275,7 @@ def pull_files(manifest_file, local_files_dir, paths_tsv, paying_project, thread
 
     with open(manifest_file, mode='r') as pull_list_file:
         pull_list = pull_list_file.read().splitlines()
-        print("Preparing to download %s files from buckets\n" % len(pull_list))
+        logger.info("Preparing to download %s files from buckets\n" % len(pull_list))
         bp = BucketPuller(paying_project, threads, test_mode)
         size = bp.pull_from_buckets(pull_list, paths_tsv, local_files_dir)
     return size
@@ -309,7 +288,7 @@ def print_time():
     now = datetime.now()
 
     current_time = now.strftime("%H:%M:%S")
-    print("Current Time =", current_time)
+    logger.info("Current Time =", current_time)
     return
 
 '''
@@ -346,11 +325,41 @@ Pull files to disk
 '''
 def main(args):
 
+    parser = argparse.ArgumentParser(
+        usage="%(prog)s --table <BQ manifest table> --paying <project ID> --destination <destination directory> --threads <num, default 16>\n\n"
+        "This program will download the files corresponding to the IDC cohort manifest defined"
+        " by a BigQuery table"
+        )
+    parser.add_argument(
+        "--table", 
+        "-t",
+        dest="table",
+        help="BigQuery table with the IDC manifest",
+        required=True
+    )
+
+    parser.add_argument(
+        "--paying", 
+        "-p",
+        dest="paying",
+        help="ID of the GCP project that will be used to charge for data egress (free if within the same region)",
+        required=True
+    )
+
+    parser.add_argument(
+        "--destination", 
+        "-d",
+        dest="destination",
+        help="Directory that will be used to store the downloaded files",
+        required=True
+    )
+
+    parser.parse_args()
     #
     # Should not need changing:
     #
 
-    AUX_TABLE = 'canceridc-data.idc.auxilliary_metadata'
+    AUX_TABLE = 'canceridc-data.idc_current.auxiliary_metadata'
 
     #
     # For testing only. Best to keep the same:
@@ -363,12 +372,15 @@ def main(args):
     # Customize these settings:
     #
 
-    TABLE = 'your-project-id.your-dataset.your-manifest-table' # BQ table with your manifest
-    MANIFEST_FILE = '/path-to-your-home-dir/BQ-MANIFEST.txt' # Where will the manifest file go
-    PATHS_TSV_FILE = '/path-to-your-home-dir/PATHS.tsv' # Where will the path file go
-    TARG_DIR = '/path-to-your-home-dir/destination' # Has to be on a filesystem with enough sapce
-    PAYING = 'your-project-id' # Needed for requester pays though it is free to crossload to a cloud VM
-    THREADS = 16 # 2 * number of cpus seems to work best
+    args = parser.parse_args()
+    TABLE = args.table # 'your-project-id.your-dataset.your-manifest-table' # BQ table with your manifest
+    MANIFEST_FILE = next(tempfile._get_candidate_names()) # '/path-to-your-home-dir/BQ-MANIFEST.txt' # Where will the manifest file go
+    logger.debug("Saving manifest to this temp file: %s" % MANIFEST_FILE)
+    PATHS_TSV_FILE = next(tempfile._get_candidate_names()) # '/path-to-your-home-dir/PATHS.tsv' # Where will the path file go
+    logger.debug("Saving paths to this temp file: %s" % PATHS_TSV_FILE)
+    TARG_DIR = args.destination # '/path-to-your-home-dir/destination' # Has to be on a filesystem with enough sapce
+    PAYING = args.paying # 'your-project-id' # Needed for requester pays though it is free to crossload to a cloud VM
+    THREADS = os.cpu_count()*2 # 16 # 2 * number of cpus seems to work best
 
     #
     # Get the manifest out of BigQuery into a local file:
@@ -387,9 +399,9 @@ def main(args):
     #
 
     pull_size = find_size(TABLE, AUX_TABLE)
-    print("Your machine will need %i bytes of storage for this download" % pull_size)
+    logger.info("Your machine will need %s bytes of storage for this download" % size(pull_size))
     total, used, free = shutil.disk_usage(TARG_DIR)
-    print("total: %i used: %i free: %i" % (total, used, free))
+    logger.info("total: %s used: %s free: %s" % (size(total), size(used), size(free)))
     overrun = pull_size - free
 
     #
@@ -397,10 +409,10 @@ def main(args):
     #
 
     if overrun > 0:
-        print("Insufficient disk space in target directory. %i more bytes needed" % overrun)
+        logger.critical("Insufficient disk space in target directory. %s more bytes needed" % size(overrun))
     else:
-        size = pull_files(MANIFEST_FILE, TARG_DIR, PATHS_TSV_FILE, PAYING, THREADS, TEST_MODE)
-        print("Your machine used %i bytes of storage for this download" % size)
+        cohort_size = int(pull_files(MANIFEST_FILE, TARG_DIR, PATHS_TSV_FILE, PAYING, THREADS, TEST_MODE))
+        logger.info("Your machine used %s of storage for this download" % size(cohort_size))
 
     return
 
