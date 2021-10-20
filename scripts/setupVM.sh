@@ -59,5 +59,7 @@ if [ ! -d "${HOME}/pyVenvForThree" ]; then
     python3 -m pip install google-api-python-client
     python3 -m pip install google-cloud-storage
     python3 -m pip install google-cloud-bigquery
+    python3 -m pip install hurry.filesize
+    python3 -m pip install tqdm
     deactivate
 fi
