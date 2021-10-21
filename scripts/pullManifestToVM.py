@@ -60,8 +60,8 @@ class BucketPuller(object):
         self._total_files = 0
         self._read_files = 0
         self._thread_count = thread_count
-        self._bar_bump = 0
         self._total_bytes = 0
+        self._pb = None
         self._size_only = size_only
         self._paths_dict = None
 
@@ -72,13 +72,12 @@ class BucketPuller(object):
         self._threads.clear()
         self._total_files = 0
         self._read_files = 0
-        self._bar_bump = 0
         self._total_bytes = 0
+        self._pb = None
         self._paths_dict = None
 
     def pull_from_buckets(self, pull_list, paths_tsv, local_files_dir):
         self._total_files = len(pull_list)
-        self._bar_bump = self._total_files // 100
         # Build the paths dict:
         logger.info("Bulding the paths dict")
         self._paths_dict = {}
@@ -87,8 +86,6 @@ class BucketPuller(object):
             for row in tsv_reader:
                 self._paths_dict[row[0]] = row[1]
         logger.info("Done")
-        if self._bar_bump == 0:
-            self._bar_bump = 1
         size = self._total_files // self._thread_count
         self._pb = tqdm.tqdm(total=self._total_files)
         size = size if self._total_files % self._thread_count == 0 else size + 1
@@ -326,7 +323,7 @@ Pull files to disk
 def main(args):
 
     parser = argparse.ArgumentParser(
-        usage="%(prog)s --table <BQ manifest table> --paying <project ID> --destination <destination directory> --threads <num, default 16>\n\n"
+        usage="%(prog)s --table <BQ manifest table> --paying <project ID> --destination <destination directory> --threads <num, default = (2 * CPUs)>\n\n"
         "This program will download the files corresponding to the IDC cohort manifest defined"
         " by a BigQuery table"
         )
@@ -354,6 +351,16 @@ def main(args):
         required=True
     )
 
+    parser.add_argument(
+        "--threads",
+        "-r",
+        dest="threads",
+        help="Threads to use. Will use 2 * CPU count if not specified",
+        default=os.cpu_count() * 2,
+        required=False
+    )
+
+
     parser.parse_args()
     #
     # Should not need changing:
@@ -365,7 +372,7 @@ def main(args):
     # For testing only. Best to keep the same:
     #
 
-    TEST_MODE = False # If set to true, will delete files after it downloaded (timing test only!)
+    TEST_MODE = False # If set to true, will delete each file after download (timing test only!)
     NUM = None  # Don't chop off the table if you are not just testing...
 
     #
@@ -373,34 +380,41 @@ def main(args):
     #
 
     args = parser.parse_args()
-    TABLE = args.table # 'your-project-id.your-dataset.your-manifest-table' # BQ table with your manifest
-    MANIFEST_FILE = next(tempfile._get_candidate_names()) # '/path-to-your-home-dir/BQ-MANIFEST.txt' # Where will the manifest file go
-    logger.debug("Saving manifest to this temp file: %s" % MANIFEST_FILE)
-    PATHS_TSV_FILE = next(tempfile._get_candidate_names()) # '/path-to-your-home-dir/PATHS.tsv' # Where will the path file go
-    logger.debug("Saving paths to this temp file: %s" % PATHS_TSV_FILE)
-    TARG_DIR = args.destination # '/path-to-your-home-dir/destination' # Has to be on a filesystem with enough sapce
-    PAYING = args.paying # 'your-project-id' # Needed for requester pays though it is free to crossload to a cloud VM
-    THREADS = os.cpu_count()*2 # 16 # 2 * number of cpus seems to work best
+    # BQ table with your manifest:
+    table = args.table
+    # Where will the manifest file go
+    manifest_file = next(tempfile._get_candidate_names())
+    logger.debug("Saving manifest to this temp file: %s" % manifest_file)
+    # Where will the path file go
+    paths_tsv_file = next(tempfile._get_candidate_names())
+    logger.debug("Saving paths to this temp file: %s" % paths_tsv_file)
+    # Has to be on a filesystem with enough space
+    targ_dir = args.destination
+    # Needed for requester pays though it is free to crossload to a cloud VM
+    paying = args.paying
+    # 2 * number of cpus seems to work best
+    threads = args.threads
+    logger.debug("Number of threads used: %i" % threads)
 
     #
     # Get the manifest out of BigQuery into a local file:
     #
 
-    pull_manifest(NUM, TABLE, MANIFEST_FILE)
+    pull_manifest(NUM, table, manifest_file)
 
     #
     # Build the file that maps bucket location to a file in the DICOM study/series/instance directory hierarchy:
     #
 
-    build_paths(TABLE, AUX_TABLE, PATHS_TSV_FILE)
+    build_paths(table, AUX_TABLE, paths_tsv_file)
 
     #
     # Figure out how big the pull will be, and if we have enough space:
     #
 
-    pull_size = find_size(TABLE, AUX_TABLE)
+    pull_size = find_size(table, AUX_TABLE)
     logger.info("Your machine will need %s bytes of storage for this download" % size(pull_size))
-    total, used, free = shutil.disk_usage(TARG_DIR)
+    total, used, free = shutil.disk_usage(targ_dir)
     logger.info("total: %s used: %s free: %s" % (size(total), size(used), size(free)))
     overrun = pull_size - free
 
@@ -411,7 +425,7 @@ def main(args):
     if overrun > 0:
         logger.critical("Insufficient disk space in target directory. %s more bytes needed" % size(overrun))
     else:
-        cohort_size = int(pull_files(MANIFEST_FILE, TARG_DIR, PATHS_TSV_FILE, PAYING, THREADS, TEST_MODE))
+        cohort_size = int(pull_files(manifest_file, targ_dir, paths_tsv_file, paying, threads, TEST_MODE))
         logger.info("Your machine used %s of storage for this download" % size(cohort_size))
 
     return
