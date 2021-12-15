@@ -57,7 +57,10 @@ def _generate_tiles_for_slide(path_to_slide: str, slide_id: str, gcs_url: str, o
     
     # Download slide in DICOM format using gsutil
     print('Downloading slide %s - %s' %(slide_id, datetime.now()))
-    cmd = ['gsutil -u {id} cp {url} {local_dir}'.format(id=google_cloud_project_id, url=gcs_url, local_dir=os.path.dirname(path_to_slide))]
+    #cmd = ['gsutil -u {id} cp {url} {local_dir}'.format(id=google_cloud_project_id, url=gcs_url, local_dir=os.path.dirname(path_to_slide))]
+    # @fedorov: Effective Dec 2021, all of IDC data is available in buckets that provide free egress. There is no need to specify project to gsutil
+    # This code should be parameterized better, but for now I am just removing this line to avoid charging user project.
+    cmd = ['gsutil cp {url} {local_dir}'.format(id=google_cloud_project_id, url=gcs_url, local_dir=os.path.dirname(path_to_slide))]
     subprocess.run(cmd, shell=True)
 
     # Open slide and instantiate a DeepZoomGenerator for that slide
