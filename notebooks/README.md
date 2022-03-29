@@ -1,6 +1,11 @@
 # IDC-Examples/notebooks
 The **notebooks** subdirectory of this repository contains a series of IPython notebooks that are intended to help you get started working with IDC hosted data.
 
+## Cookbook
+
+This notebook can be used as a source of small examples and useful bits for developing your own notebooks:
+* IDC Colab cookbook [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/cookbook.ipynb)
+
 ## Data Download and Exploration
 
 The following notebooks contain examples of how to download and explore IDC cohorts:
