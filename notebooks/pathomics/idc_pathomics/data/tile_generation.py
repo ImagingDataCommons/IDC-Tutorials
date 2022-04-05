@@ -3,11 +3,11 @@ from glob import glob
 import numpy as np
 import pandas as pd
 import re
+from PIL.Image import Image
 from wsidicom import WsiDicom
 from pydicom import config 
 config.enforce_valid_values = False
 from wsidicom.geometry import SizeMm
-from PIL.Image import Image
 import subprocess
 from datetime import datetime
 from typing import Tuple
