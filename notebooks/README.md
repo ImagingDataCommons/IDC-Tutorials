@@ -1,7 +1,9 @@
 # IDC-Examples/notebooks
 The **notebooks** subdirectory of this repository contains a series of IPython notebooks that are intended to help you get started working with IDC hosted data.
 
-## Cookbook
+## Try these first
+
+* IDC segmentation primer: Experimenting with nnU-Net Segmentation of IDC Data [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/IDC_segmentation_primer.ipynb)
 
 This notebook can be used as a source of small examples and useful bits for developing your own notebooks:
 * IDC Colab cookbook [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/cookbook.ipynb)
