@@ -30,7 +30,7 @@ The following notebooks contain examples of how IDC can be used to run AI-based 
 
 **N.B.**: since these demonstrations run in Google Colab, they highlight only a small part of what IDC can offer in terms of computational capability for imaging analysis. A more comprehensive experience of such tools can be explored, e.g., by experimenting with GCP Virtual Machines.
 
-To learn more about how to access the GCP virtual machines for free (exploiting GCP and/or IDC [free cloud credits](https://learn.canceridc.dev/introduction/requesting-gcp-cloud-credits)), please visit the [IDC user guide](https://learn.canceridc.dev/). 
+To learn more about how to access the GCP virtual machines for free (using [free cloud credits](https://learn.canceridc.dev/introduction/requesting-gcp-cloud-credits)), please visit the [IDC user guide](https://learn.canceridc.dev/). 
 
 
 
