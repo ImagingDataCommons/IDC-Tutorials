@@ -2,7 +2,7 @@
 The **notebooks** subdirectory of this repository contains a series of IPython notebooks that are intended to help you get started working with IDC hosted data.
 
 ## Try these first
-* Getting started: Introduction to IDC data organization and main features [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/exploring_segmentations_for_monai.ipynb)
+* Getting started: Introduction to IDC data organization and main features [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/getting_started.ipynb)
 * IDC segmentation primer: Experimenting with nnU-Net Segmentation of IDC Data [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/IDC_segmentation_primer.ipynb)
 
 This notebook can be used as a source of small examples and useful bits for developing your own notebooks:
