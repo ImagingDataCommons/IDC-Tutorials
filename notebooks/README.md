@@ -12,6 +12,7 @@ This notebook can be used as a source of small examples and useful bits for deve
 
 The following notebooks contain examples of how to download and explore IDC cohorts:
 
+* Introduction to IDC clinical data organization [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/clinical_data_intro.ipynb)
 * LIDC exploration [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/LIDC_exploration.ipynb)
 * Cohort download [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ImagingDataCommons/IDC-Examples/blob/master/notebooks/Cohort_download.ipynb)
 
