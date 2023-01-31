@@ -17,7 +17,7 @@ hurry.filesize==0.9
 idna==3.3
 packaging==21.0
 proto-plus==1.19.5
-protobuf==3.18.1
+protobuf==3.18.3
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pyparsing==2.4.7
