@@ -4,4 +4,8 @@ matplotlib
 seaborn
 pandas
 numpy
+onnx
+onnxruntime
+pyplastimatch
 sklearn
+thedicomsort
