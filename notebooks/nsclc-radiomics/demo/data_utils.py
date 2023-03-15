@@ -1,21 +1,19 @@
 """
     ----------------------------------------
-    IDC Radiomics use case (Colab Demo)
+    IDC Radiomics use case (Colab)
     
-    useful functions for data handling/proc
+    Functions for data handling/processing
     ----------------------------------------
     
     ----------------------------------------
     Author: Dennis Bontempi
-    Email:  dennis_bontempi@dfci.harvard.edu
-    Modified: 07 OCT 20
+    Email:  dbontempi@bwh.harvard.edu
     ----------------------------------------
     
 """
 
 import os
 import json
-import pydicom
 import numpy as np
 import SimpleITK as sitk
 
@@ -23,19 +21,23 @@ import subprocess
 
 ## ----------------------------------------
 
-# normalise the values of the volume between new_min_val and new_max_val
 def normalise_volume(input_volume, new_min_val, new_max_val, old_min_val = None, old_max_val = None):
 
   """
-  Normalise a numpy volume intensity in a range between two given values
-  
-  @params:
-    input_volume - required : numpy volume to rescale (intensity-wise) in the new range.
-    new_min_val  - required : the lower bound of the new intensity range.
-    new_max_val  - required : the upper bound of the new intensity range.
-    old_min_val  - optional : the lower bound of the old intensity range. Defaults to input_volume's np.min()
-    old_max_val  - optional : the lower bound of the old intensity range. Defaults to input_volume's np.max()
-    
+  This function normalizes the volume of an image between
+  a new minimum and maximum value, given the old minimum and maximum values.
+
+  Parameters:
+    - input_volume: a 3D numpy array representing the image to be normalized.
+    - new_min_val: a float representing the new minimum value for the normalized image.
+    - new_max_val: a float representing the new maximum value for the normalized image.
+    - old_min_val: a float representing the old minimum value of the image.
+      If None, the minimum value of the input_volume will be used.
+    - old_max_val: a float representing the old maximum value of the image.
+      If None, the maximum value of the input_volume will be used.
+
+  Returns:
+    - a 3D numpy array representing the normalized image
   """
   
   # make sure the input volume is treated as a float volume
@@ -45,7 +47,6 @@ def normalise_volume(input_volume, new_min_val, new_max_val, old_min_val = None,
   
   curr_min = np.min(input_volume) if old_min_val == None else old_min_val
   curr_max = np.max(input_volume) if old_max_val == None else old_max_val
-
 
   # normalise the values of each voxel between zero and one
   zero_to_one_norm = (input_volume - curr_min)/(curr_max - curr_min)
@@ -59,26 +60,20 @@ def normalise_volume(input_volume, new_min_val, new_max_val, old_min_val = None,
 def compute_center_of_mass(input_mask):
   
   """
-  Compute the center of mass (CoM) of a given binary 3D numpy segmask (fast version, numpy based).
-  The idea is the following:
-    - create a 4D vector starting from the 3D, populating each channel as follows:
-      (x pos, y pos, z pos, mask_value);
-    - keep only the nonzero values;
-    - compute an average of the position (CoM) using such triplets (x, y, z).
+  This function computes the center of mass (CoM) of a binary 3D mask.
+
+  Parameters:
+    - input_mask: a 3D numpy array representing the binary mask.
+
+  Returns:
+    - a 3D numpy array representing the CoM in (x, y, z) coordinates
   
-  @params:
-    input_mask - required : the 3D numpy vector (binary mask) to compute the center of mass of.
-    
-  @returns:
-    ctr_mass - a list of three elements storing the coordinates of the CoM
-               (the axes are the same as the input mask)
-    
   """
-  
-  # sanity check: mask should be binary (multi-class RT is taken care of during in the export function)
+
+  # sanity check: the mask should be binary
   assert(len(np.unique(input_mask)) <= 2)
   
-  # display and log warning
+  # display a warning if the mask is empty
   if len(np.unique(input_mask)) == 1:
     print('WARNING: DICOM RTSTRUCT is empty.')
     return [-1, -1, -1]
@@ -103,32 +98,35 @@ def compute_center_of_mass(input_mask):
   nonzero_voxels = segmask_4d[np.nonzero(segmask_4d[:, :, :, 3])]
 
   # average the (x, y, z) triplets
-  ctr_mass = np.average(nonzero_voxels[:, :3], axis = 0)
+  com = np.average(nonzero_voxels[:, :3], axis = 0)
     
-  return ctr_mass
-
+  return com
   
 ## ----------------------------------------
 ## ----------------------------------------
 
 def get_bbox_dict(int_center_of_mass, seg_mask_shape, bbox_size, z_first = True):
 
+
   """
-  Compute the crop bounding box indices starting from the CoM and the BBox size.
+  Computes the bounding box of a segmented mask centered around a center of mass, given a specified box size. 
   
-  @params:
-    int_center_of_mass - required : a list of integers (int(CoM)) where CoM is the output
-                                    of the function "compute_center_of_mass()"
-    bbox_size          - required : the size of the bounding box along each axis.
-    z_first            - optional : if True, returns the dict as (lon, cor, sag), i.e., (z, y, x),
-                                    as opposed to (sag, cor, lon), i.e., (x, y, z) (defaults to True).
-  
-  @returns:
-    bbox : a dictionary formatted as follows:
+  Parameters:
+    - int_center_of_mass: a tuple or list of three integers representing the center of mass.
+    - seg_mask_shape: a tuple or list of three integers representing the shape of the segmented mask.
+    - bbox_size: a tuple or list of three integers representing the size of the bounding box
+      in each direction (coronal, sagittal, and longitudinal).
+    - z_first: a boolean indicating whether the longitudinal direction is the first dimension (True)
+      or the third dimension (False). Defaults to True.
+
+  Returns:
+    - a dictionary with the indices of the first and last voxels in each direction (coronal, sagittal, and longitudinal)
+      that define the bounding box, formatted as follows:
+
       {
-       'lon': {'first': 89, 'last': 139}
-       'cor': {'first': 241, 'last': 291},
-       'sag': {'first': 150, 'last': 200}
+        'lon': {'first': 89, 'last': 139}
+        'cor': {'first': 241, 'last': 291}, 
+        'sag': {'first': 150, 'last': 200}  
       }
   """
   
@@ -146,8 +144,7 @@ def get_bbox_dict(int_center_of_mass, seg_mask_shape, bbox_size, z_first = True)
   lon_idx = 0 if z_first else 2
   sag_idx = 2 if z_first else 0
   
-  
-  # bounding box if no exception is found
+  # bounding box if no exception is raised
   sag_first = int(int_center_of_mass[sag_idx] - np.round(bbox_size[sag_idx]/2))
   sag_last = int(int_center_of_mass[sag_idx] + np.round(bbox_size[sag_idx]/2)) - 1
   
@@ -156,7 +153,6 @@ def get_bbox_dict(int_center_of_mass, seg_mask_shape, bbox_size, z_first = True)
   
   lon_first = int(int_center_of_mass[lon_idx] - np.round(bbox_size[lon_idx]/2))
   lon_last = int(int_center_of_mass[lon_idx] + np.round(bbox_size[lon_idx]/2)) - 1
-  
 
   # print out exceptions
   if sag_last > seg_mask_shape[sag_idx] - 1 or sag_first < 0:
@@ -171,7 +167,6 @@ def get_bbox_dict(int_center_of_mass, seg_mask_shape, bbox_size, z_first = True)
     print('WARNING: the bounding box size exceeds volume dimensions (lon axis)')
     print('Cropping will be performed ignoring the "bbox_size" parameter')
     
-    
   # take care of exceptions where bbox is bigger than the actual volume
   sag_first = int(np.max([0, sag_first]))
   sag_last = int(np.min([seg_mask_shape[sag_idx] - 1, sag_last]))
@@ -181,7 +176,6 @@ def get_bbox_dict(int_center_of_mass, seg_mask_shape, bbox_size, z_first = True)
   
   lon_first = int(np.max([0, lon_first]))
   lon_last = int(np.min([seg_mask_shape[lon_idx] - 1, lon_last]))
-  
   
   # populate the dictionary and return it
   bbox['sag']['first'] = sag_first
@@ -195,48 +189,6 @@ def get_bbox_dict(int_center_of_mass, seg_mask_shape, bbox_size, z_first = True)
     
   return bbox
   
-
-## ----------------------------------------
-## ----------------------------------------
-
-def get_input_volume(input_ct_nrrd_path):
-
-  """
-  Should accept path to (ideally 150x150x150) NRRD volumes only, obtained
-  exploting the pipeline in "lung1_preprocessing.ipynb" using the functions above.
-  
-  FIXME: add as params also "com_int" and "final_crop_size = (50, 50, 50)"
-         (handling of volumes that are not 150x150x150?)
-  
-  """
-  
-  sitk_ct_nrdd = sitk.ReadImage(input_ct_nrrd_path)
-  ct_nrdd = sitk.GetArrayFromImage(sitk_ct_nrdd)
-      
-  # volume intensity normalisation, as seen in:
-  # https://github.com/modelhub-ai/deep-prognosis/blob/master/contrib_src/processing.py
-  ct_nrdd_norm = normalise_volume(input_volume = ct_nrdd,
-                                  new_min_val = 0,
-                                  new_max_val = 1,
-                                  old_min_val = -1024,
-                                  old_max_val = 3071)
-    
-  # FIXME: handle exceptions for volumes that are not 150x150x150
-  ct_nrdd_norm_crop = ct_nrdd_norm[50:100, 50:100, 50:100]
-  
-  """
-  # FIXME: debug
-  print(ct_nrdd.shape)
-  print(ct_nrdd_norm.shape)
-  print(min_x, max_x)
-  print(min_y, max_y)
-  print(min_z, max_z)
-  print(ct_nrdd_norm_crop.shape)
-  """
-  
-  return ct_nrdd_norm_crop
-  
-  
 ## ----------------------------------------
 ## ----------------------------------------
 
@@ -244,19 +196,20 @@ def export_res_nrrd_from_dicom(dicom_ct_path, dicom_rt_path, output_dir, pat_id,
                                ct_interpolation = 'linear', output_dtype = "int"):
   
   """
-  Convert DICOM CT and RTSTRUCT sequences to NRRD files and resample to 1-mm isotropic
-  exploiting plastimatch (direct call, bash-like).
   
-  @params:
-    dicom_ct_path - required :
-    dicom_rt_path - required :
-    output_dir    - required : 
-    pat_id        - required :
-    output_dtype  - optional : 
-    
-  @returns:
-    out_log : 
-    
+  This function exports a resampled CT scan and a resampled RT structure set from a DICOM CT and a DICOM RT structure set.
+  
+  Parameters:
+    - dicom_ct_path: a string representing the path of the DICOM CT folder.
+    - dicom_rt_path: a string representing the path of the DICOM RT structure set folder.
+    - output_dir: a string representing the path of the output directory.
+    - pat_id: a string representing the patient ID.
+    - ct_interpolation: a string representing the interpolation method to be used for the CT scan resampling.
+    - output_dtype: a string representing the data type of the exported nrrd files.
+
+  Returns:
+    - a dictionary containing the paths of the exported nrrd files.
+
   """
   
   out_log = dict()
@@ -268,7 +221,7 @@ def export_res_nrrd_from_dicom(dicom_ct_path, dicom_rt_path, output_dir, pat_id,
   # log the labels of the exported segmasks
   rt_struct_list_path = os.path.join(output_dir, pat_id + '_rt_list.txt')
   
-  # convert DICOM CT to NRRD file - no resampling
+  # convert DICOM CT to NRRD file without resampling
   bash_command = list()
   bash_command += ["plastimatch", "convert"]
   bash_command += ["--input", dicom_ct_path]
@@ -279,8 +232,7 @@ def export_res_nrrd_from_dicom(dicom_ct_path, dicom_rt_path, output_dir, pat_id,
   out_log['dcm_ct_to_nrrd'] = subprocess.call(bash_command)
   print("Done.")
   
-  
-  # convert DICOM RTSTRUCT to NRRD file - no resampling
+  # convert DICOM RTSTRUCT to NRRD file without resampling
   bash_command = list()
   bash_command += ["plastimatch", "convert"]
   bash_command += ["--input", dicom_rt_path]
@@ -318,10 +270,6 @@ def export_res_nrrd_from_dicom(dicom_ct_path, dicom_rt_path, output_dir, pat_id,
   out_log['dcm_nrrd_ct_resampling'] = subprocess.call(bash_command)
   print("Done.")
   
-  # FIXME: log informations about the native volume
-  #out_log["shape_original"] = list(tmp.)
-  
-  
   # resample the NRRD RTSTRUCT file to 1mm isotropic
   bash_command = list()
   bash_command += ["plastimatch", "resample"]
@@ -335,29 +283,34 @@ def export_res_nrrd_from_dicom(dicom_ct_path, dicom_rt_path, output_dir, pat_id,
   out_log['dcm_nrrd_rt_resampling'] = subprocess.call(bash_command)
   print("Done.")
 
-  
   # clean up
   print("\nRemoving temporary files (DICOM to NRRD, non-resampled)... ", end = '')
   os.remove(ct_nrrd_path)
-  # FIXME: keep the RTSTRUCTs (latest LUNG1 has multiple structures --> additional checks afterwards)?
-  #os.remove(rt_nrrd_path)
   print("Done.")
   
-
   return out_log
 
 
 ## ----------------------------------------
 ## ----------------------------------------
 
-def export_com_subvolume(ct_nrrd_path, rt_nrrd_path, crop_size, output_dir, pat_id,
+def export_com_subvolume(ct_nrrd_path, rt_nrrd_path, output_dir, pat_id, crop_size = (150, 150, 150),
                          z_first = True, rm_orig = False):
 
   """
-  Main reason: save space
-  
-  Use plastimatch so that we don't need to load and then write NRRD through python (pynrrd)
-  
+  This function exports a subvolume centered on the CoM of the GTV and of the same size as the crop_size parameter.
+
+  Parameters:
+    - ct_nrrd_path: a string representing the path to the NRRD CT file.
+    - rt_nrrd_path: a string representing the path to the NRRD RTSTRUCT file.
+    - output_dir: a string representing the path of the output directory.
+    - pat_id: a string representing the patient ID.
+    - crop_size: a tuple representing the size of the subvolume to be exported. Defaults to 150x150x150.
+    - z_first: a boolean indicating whether the z-axis is the first or the last in the NRRD files. Defaults to True.
+    - rm_orig: a boolean indicating whether the original CT and RTSTRUCT files should be removed. Defaults to False.
+
+  Returns:
+    - a dictionary containing the log of the operations performed.
   """
   
   # sanity check
@@ -449,4 +402,37 @@ def export_com_subvolume(ct_nrrd_path, rt_nrrd_path, crop_size, output_dir, pat_
   
   return out_log
   
+
+## ----------------------------------------
+## ----------------------------------------
+
+def get_input_volume(input_ct_nrrd_path):
+
+  """
+  This function prepares the data to be ingested by the model.
+  It reads a CT scan nrrd file, normalizes the volume intensity, and crops the volume to a size of 50x50x50.
+  Here, the input volume is assumed to be a 150x150x150 volume (see the export_com_subvolume function).
+
+  Parameters:
+    - input_ct_nrrd_path: a string representing the file path of the CT scan nrrd file.
+
+  Returns:
+    - a numpy array of shape (50,50,50) representing the cropped and normalized volume.
+  
+  """
+  sitk_ct_nrdd = sitk.ReadImage(input_ct_nrrd_path)
+  ct_nrdd = sitk.GetArrayFromImage(sitk_ct_nrdd)
+      
+  # volume intensity normalisation, should follow the same procedure as in the original code:
+  # https://github.com/modelhub-ai/deep-prognosis/blob/master/contrib_src/processing.py
+  ct_nrdd_norm = normalise_volume(input_volume = ct_nrdd,
+                                  new_min_val = 0,
+                                  new_max_val = 1,
+                                  old_min_val = -1024,
+                                  old_max_val = 3071)
+    
+  ct_nrdd_norm_crop = ct_nrdd_norm[50:100, 50:100, 50:100]
+  
+  return ct_nrdd_norm_crop
+
   

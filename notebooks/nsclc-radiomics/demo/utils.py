@@ -1,14 +1,13 @@
 """
     ----------------------------------------
-    IDC Radiomics use case (Colab Demo)
+    IDC Radiomics use case (Colab)
     
-    useful functions for data viz/other
+    Functions for data viz and more
     ----------------------------------------
     
     ----------------------------------------
     Author: Dennis Bontempi
-    Email:  dennis_bontempi@dfci.harvard.edu
-    Modified: 07 OCT 20
+    Email:  dbontempi@bwh.harvard.edu
     ----------------------------------------
     
 """
@@ -28,8 +27,8 @@ from matplotlib.colors import ListedColormap
 
 ## ----------------------------------------
 
-# create new colormap appending the alpha channel to the selected one
-# (so that we don't get a "color overlay" when plotting the segmask superimposed to the CT)
+# Create new colormap appending the alpha channel to the selected one
+# so that we don't get a "color overlay" when plotting the segmask over the CT image
 cmap = plt.cm.Reds
 my_reds = cmap(np.arange(cmap.N))
 my_reds[:,-1] = np.linspace(0, 1, cmap.N)
@@ -49,6 +48,22 @@ my_jet = ListedColormap(my_jet)
 def export_png_slice(input_volume, input_segmask, fig_out_path, fig_dpi = 220,
                      lon_slice_idx = 0, cor_slice_idx = 0, sag_slice_idx = 0, z_first = True):
   
+  """
+  This function exports a PNG figure with 3 slices of the input volume and the corresponding segmentation mask.
+
+  Parameters:
+    - input_volume: a 3D numpy array representing the image to be normalized.
+    - input_segmask: a 3D numpy array representing the segmentation mask.
+    - fig_out_path: the path where the figure will be saved.
+    - fig_dpi: the resolution of the figure.
+    - lon_slice_idx: the index of the longitudinal slice to be exported.
+    - cor_slice_idx: the index of the coronal slice to be exported.
+    - sag_slice_idx: the index of the sagittal slice to be exported.
+
+  Returns:
+    - 0 if everything went well. 
+  """
+
   idx_x1 = cor_slice_idx
   idx_x0 = lon_slice_idx if z_first else sag_slice_idx
   idx_x2 = sag_slice_idx if z_first else lon_slice_idx
@@ -82,7 +97,6 @@ def export_png_slice(input_volume, input_segmask, fig_out_path, fig_dpi = 220,
   ax2.imshow(seg_slice_x2, cmap = my_reds, alpha = 0.6)
   ax2.set_title('CoM CT slice (%s) + GTV mask'%(x2_view_str))
 
-  # FIXME: verbose
   print('\nExporting figure at:', fig_out_path)
   fig.savefig(fig_out_path)
   plt.close(fig)
