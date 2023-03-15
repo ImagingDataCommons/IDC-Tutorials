@@ -5,7 +5,7 @@ seaborn
 pandas
 numpy
 onnx
-onnxruntime
+onnxruntime_gpu
 pyplastimatch
 sklearn
 thedicomsort
