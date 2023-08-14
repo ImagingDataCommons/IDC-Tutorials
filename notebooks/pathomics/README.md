@@ -3,5 +3,5 @@ This repository contains a short notebook (lung_cancer_cptac_DataExploration.ipy
 
 <img src="IDCportal.png" width="700"/>
 
-More elaborate tutorials on how to train a tissue classification model can be found in the Github repository [idc-comppath-reproducibility](https://github.com/ImagingDataCommons/idc-comppath-reproducibility) as part of the paper "[The NCI Imaging Data Commons as a platform for reproducible research in computational pathology](
-https://doi.org/10.48550/arXiv.2303.09354)", which is currently under review. 
+More elaborate tutorials on how to train a tissue classification model can be found in the Github repository [idc-comppath-reproducibility](https://github.com/ImagingDataCommons/idc-comppath-reproducibility) as part of the paper ["The NCI Imaging Data Commons as a platform for reproducible research in computational pathology"](
+https://doi.org/10.48550/arXiv.2303.09354), which is currently under review. 
