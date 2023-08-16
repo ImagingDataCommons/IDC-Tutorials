@@ -1,7 +1,7 @@
 # Introduction to working with digital pathology images in IDC
 This repository contains a short notebook (lung_cancer_cptac_DataExploration.ipynb) giving an idea on how to explore available collections of pathology whole-slide images (WSIs) in the IDC. 
 
-<img src="IDCportal.png" width="700"/>
-
 More elaborate tutorials on how to train a tissue classification model can be found in the Github repository [idc-comppath-reproducibility](https://github.com/ImagingDataCommons/idc-comppath-reproducibility) as part of the paper ["The NCI Imaging Data Commons as a platform for reproducible research in computational pathology"](
-https://doi.org/10.48550/arXiv.2303.09354), which is currently under review. 
+https://doi.org/10.48550/arXiv.2303.09354), which is currently under review.
+
+<img src="IDCportal.png" width="700"/>
