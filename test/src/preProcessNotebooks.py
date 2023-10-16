@@ -22,9 +22,9 @@ def modify_notebook(file_name, project_id, query1, query2):
 
 # Command to run
 files = [
-    "/notebooks/getting_started/part1_prerequisites.ipynb",
-    "/notebooks/getting_started/part2_searching_basics.ipynb",
-    "/notebooks/getting_started/part3_exploring_cohorts.ipynb"
+    "notebooks/getting_started/part1_prerequisites.ipynb",
+    "notebooks/getting_started/part2_searching_basics.ipynb",
+    "notebooks/getting_started/part3_exploring_cohorts.ipynb"
 ]
 
 for file_name in files:
