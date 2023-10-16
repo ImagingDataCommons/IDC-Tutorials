@@ -4,7 +4,7 @@ This GitHub repository uses a GitHub Actions workflow to check if getting starte
 
 # Status
 
-[![Getting Started Notebooks in the latest Colab environment](https://github.com/vkt1414/track-colab-env/actions/workflows/test_colab.yml/badge.svg)](https://github.com/vkt1414/track-colab-env/actions/workflows/test_colab.yml)
+[![Getting Started Notebooks in the latest Colab environment](https://github.com/ImagingDataCommons/IDC-Tutorials/actions/workflows/test_colab.yml/badge.svg)](https://github.com/ImagingDataCommons/IDC-Tutorials/actions/workflows/test_colab.yml)
 
 ## Workflow
 
