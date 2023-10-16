@@ -32,7 +32,7 @@ def main():
 
     # Step 5: Read the existing CSV file from the local repository
     try:
-        existing_df = pd.read_csv('/test/colab-images-list.csv')
+        existing_df = pd.read_csv('test/colab-images-list.csv')
     except FileNotFoundError:
         print("Failed to read CSV file from local repository.")
         existing_df = None
