@@ -96,7 +96,7 @@ jobs:
           done
           
       - name: Commit changes
-        if: ${{ github.event_name == 'workflow_dispatch' || github.event == 'push' }}
+        if: ${{ github.event_name != 'pull_request' }}
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: 'Check colab env'
