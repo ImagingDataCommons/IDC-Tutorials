@@ -101,7 +101,7 @@ jobs:
         with:
           commit_message: 'Check colab env'
           file_pattern: 'test/*.csv test/outputs/*.ipynb'
-          branch: 'main'
+          branch: 'master'
       
       - name: Check output notebooks for errors 
         run: | 
