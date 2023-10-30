@@ -42,7 +42,7 @@ This tutorial will leverage learning materials available in the [IDC notebooks r
 * [IDC Segmentation primer: using nnU-Net for segmenting abdominal organs in chest CT](https://github.com/ImagingDataCommons/IDC-Examples/blob/master/notebooks/IDC_segmentation_primer.ipynb)
 * [Introduction to exploring clinical data in IDC](https://github.com/ImagingDataCommons/IDC-Examples/blob/master/notebooks/clinical_data_intro.ipynb)
 
-A growing number of AI models available as Colab notebooks accompanied by demonstrations of applying them to data in IDC is available in the [ModelHub.AI](http://app.modelhub.ai/) platform.
+A growing number of AI models available as Colab notebooks accompanied by demonstrations of applying them to data in IDC is available in the [MHub.AI](http://mhub.ai/) platform.
 
 ## Support and additional resources
 
