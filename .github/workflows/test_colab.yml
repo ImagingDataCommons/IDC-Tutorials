@@ -94,14 +94,15 @@ jobs:
             docker stop colab
             docker rm colab
           done
-          
-      - name: Commit changes
-        if: ${{ github.event_name != 'pull_request' }}
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: 'Check colab env'
-          file_pattern: 'test/*.csv test/outputs/*.ipynb'
-          branch: 'master'
+
+      # skip commit
+      #- name: Commit changes
+      #  if: ${{ github.event_name != 'pull_request' }}
+      #  uses: stefanzweifel/git-auto-commit-action@v4
+      #  with:
+      #    commit_message: 'Check colab env'
+      #    file_pattern: 'test/*.csv test/outputs/*.ipynb'
+      #    branch: 'master'
       
       #- name: Check output notebooks for errors 
       #  run: | 
