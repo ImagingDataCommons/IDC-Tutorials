@@ -1,6 +1,49 @@
-# IDC-Examples
-This repository contains a series of examples to get you started using the data and tools provided by the Imaging Data Commons on the Google Cloud Platform.
+# Welcome!
 
-* **[notebooks](https://github.com/ImagingDataCommons/IDC-Examples/tree/master/notebooks)**: this directory contains tutorials in the form of [Google Colab](https://colab.research.google.com/) notebooks.
+This repository contains tutorial materials (for the most part, as Python notebooks) that are developed to help you learn about [NCI Imaging Data Commons](https://imaging.datacommons.cancer.gov) and utilize it in your work.
 
-* **[API](https://github.com/ImagingDataCommons/IDC-Examples/tree/master/API)**: this directory contains example scripts that illustrate the use of the IDC API;
+If this is the first time you hear about IDC, here are some highlights about what it has to offer:
+* **>45 TB of data**: IDC contains radiology, brightfield (H&E) and fluorescence slide microscopy images, along with image-derived data (annotations, segmentations, quantitative measurements) and accompanying clinical data
+* **free**: all of the data in IDC is publicly available: no registration, no access requests
+* **cloud-based**: all of the data in IDC is available from both Google and AWS public buckets: fast and free to download, no out-of-cloud egress fees
+* **commercial-friendly**: most of the data in IDC is covered by the permissive CC-BY license, which allows commercial reuse (small subset of data is covered by the CC-NC license); each file in IDC is tagged with the license to make it easy for you to understand and follow the rules
+* **harmonized**: all of the images and image-derived data in IDC is harmonized into standard DICOM representation
+
+The tutorial notebooks are located in the [notebooks](https://github.com/ImagingDataCommons/IDC-Tutorials/tree/master/notebooks), and are organized in the following folders.
+
+## `getting_started`
+
+"Getting Started" notebooks are intended to introduce the users to IDC. We believe those notebooks are the best place to start using IDC. In this notebook series you will learn:
+* how IDC data is organized
+* how to search IDC data
+* how to download data from IDC
+* how to use various visualization tools with IDC data
+* how to properly acknowledge data contributors and stay compliant with the usage license
+
+## `advanced_topics`
+
+Notebooks in this folder focus on topics that will require understanding of the basics, and aim to address more narrow use cases of IDC usage. Such topics include:
+* how to search clinical data accompanying IDC images and how to combine imaging and clinical metadata in your searches
+* how to use AWS-specific components for working with IDC data
+* how to deploy open source OHIF and Slim viewers using free Google Cloud resources
+
+## `collectons_demos`
+
+This folders contains notebooks that demonstrate the usage of the data in the specific IDC collections. The notebooks in this folder will always have the prefix of the `collection_id` they correspond to, for easier navigation.
+
+## `pathomics`
+
+This folder is dedicated to the notebooks focused on the digital pathology (pathomics) applications. The use of DICOM standard is relatively new in digital pathology, and this field is being actively developed, thus a dedicated folder for this.
+
+## `deprecated`
+
+IDC is an actively evolving resource. As we develop new and improved capabilities, we improve our recommended usage practices, and may deprecate notebooks that are no longer maintained and may no longer work. You will find thse in the `deprecated` folder.
+
+## `testing`
+
+This directory is used for the maintenance of the repository to support testing of the actively supported notebooks. 
+
+# Support
+
+If you have any questions about the notebooks in this repository, please open a discussion thread in IDC user forum, or open the issue in this repository.
+
