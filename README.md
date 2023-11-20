@@ -11,7 +11,7 @@ If this is the first time you hear about IDC, here are some highlights about wha
 
 The tutorial notebooks are located in the [notebooks](https://github.com/ImagingDataCommons/IDC-Tutorials/tree/master/notebooks), and are organized in the following folders.
 
-## `getting_started`
+## [`getting_started`](https://github.com/ImagingDataCommons/IDC-Tutorials/tree/master/notebooks/getting_started)
 
 "Getting Started" notebooks are intended to introduce the users to IDC. We believe those notebooks are the best place to start using IDC. In this notebook series you will learn:
 * how IDC data is organized
@@ -20,22 +20,22 @@ The tutorial notebooks are located in the [notebooks](https://github.com/Imaging
 * how to use various visualization tools with IDC data
 * how to properly acknowledge data contributors and stay compliant with the usage license
 
-## `advanced_topics`
+## [`advanced_topics`](https://github.com/ImagingDataCommons/IDC-Tutorials/tree/master/notebooks/advanced_topics)
 
 Notebooks in this folder focus on topics that will require understanding of the basics, and aim to address more narrow use cases of IDC usage. Such topics include:
 * how to search clinical data accompanying IDC images and how to combine imaging and clinical metadata in your searches
 * how to use AWS-specific components for working with IDC data
 * how to deploy open source OHIF and Slim viewers using free Google Cloud resources
 
-## `collectons_demos`
+## [`collectons_demos`](https://github.com/ImagingDataCommons/IDC-Tutorials/tree/master/notebooks/collections_demos)
 
 This folders contains notebooks that demonstrate the usage of the data in the specific IDC collections. The notebooks in this folder will always have the prefix of the `collection_id` they correspond to, for easier navigation.
 
-## `pathomics`
+## [`pathomics`](https://github.com/ImagingDataCommons/IDC-Tutorials/tree/master/notebooks/pathomics)
 
 This folder is dedicated to the notebooks focused on the digital pathology (pathomics) applications. The use of DICOM standard is relatively new in digital pathology, and this field is being actively developed, thus a dedicated folder for this.
 
-## `deprecated`
+## [`deprecated`](https://github.com/ImagingDataCommons/IDC-Tutorials/tree/master/notebooks/deprecated)
 
 IDC is an actively evolving resource. As we develop new and improved capabilities, we improve our recommended usage practices, and may deprecate notebooks that are no longer maintained and may no longer work. You will find thse in the `deprecated` folder.
 
@@ -45,5 +45,4 @@ This directory is used for the maintenance of the repository to support testing 
 
 # Support
 
-If you have any questions about the notebooks in this repository, please open a discussion thread in IDC user forum, or open the issue in this repository.
-
+If you have any questions about the notebooks in this repository, please open a discussion thread in [IDC user forum](https://discourse.canceridc.dev), or [open the issue in this repository](https://github.com/ImagingDataCommons/IDC-Tutorials/issues/new).
