@@ -35,6 +35,10 @@ This folders contains notebooks that demonstrate the usage of the data in the sp
 
 This folder is dedicated to the notebooks focused on the digital pathology (pathomics) applications. The use of DICOM standard is relatively new in digital pathology, and this field is being actively developed, thus a dedicated folder for this.
 
+## [`labs`](https://github.com/ImagingDataCommons/IDC-Tutorials/tree/master/notebooks/labs)
+
+Here you will find an archive of the notebooks that were used in tutorials, which at times may demonstrate experimental features. By design, the notebooks presented at specific events may not be updated after the event, and are stored in this folder for archival purposes.
+
 ## [`deprecated`](https://github.com/ImagingDataCommons/IDC-Tutorials/tree/master/notebooks/deprecated)
 
 IDC is an actively evolving resource. As we develop new and improved capabilities, we improve our recommended usage practices, and may deprecate notebooks that are no longer maintained and may no longer work. You will find thse in the `deprecated` folder.
