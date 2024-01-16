@@ -3,17 +3,24 @@ name: Check Commits and Colab Images
 on:
   push:
     branches: [ "master" ]
+    paths:
+      - ".github/workflows/test_colab.yml"
+      - "notebooks/getting_started/part**.ipynb"
   pull_request:
     branches: [ "master" ]
+    paths:
+      - ".github/workflows/test_colab.yml"
+      - "notebooks/getting_started/part**.ipynb"
   workflow_dispatch:
   schedule:
     - cron: 0 12 */1 * *
     
 jobs:
-  check_commits_and_images:
+  check_colab_images:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
 
     steps:
       - name: Checkout code
@@ -28,15 +35,15 @@ jobs:
         run: pip install requests==2.31.0 pandas==2.1.1 google-cloud-bigquery==3.12.0 pyarrow==13.0.0 nbformat==5.9.2
 
       - name: Authorize Google Cloud
+        if: github.event_name != 'pull_request'
         uses: google-github-actions/auth@v1
         with:
           credentials_json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
           create_credentials_file: true
           export_environment_variables: true
 
-      - name: Run check-commits.py and check-colab-images.py, preprocess notebooks scripts
+      - name: Run check-colab-images.py and preprocess notebooks
         run: |
-          python test/src/check-commits.py
           python test/src/check-colab-images.py
           python test/src/preProcessNotebooks.py
 
@@ -60,24 +67,26 @@ jobs:
           swap-storage: true
 
       - name: Docker login
+        if: github.event_name != 'pull_request'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           
       - name: Pull from GCP and Push Docker image to Docker Hub    
-        if: env.RESULT == 'true'
+        if: github.event_name != 'pull_request' && env.RESULT == 'true'
         run: |
           docker pull us-docker.pkg.dev/colab-images/public/runtime:latest
           docker tag us-docker.pkg.dev/colab-images/public/runtime:latest imagingdatacommons/idc-testing-colab:latest
           docker push imagingdatacommons/idc-testing-colab:latest
 
       - name: Pull Docker image from Docker Hub
-        if: env.RESULT == 'false'
+        if: github.event_name == 'pull_request' || env.RESULT == 'false'
         run: |
           docker pull imagingdatacommons/idc-testing-colab:latest
           
       - name: Copy Google Cloud credentials to Docker container
+        if: github.event_name != 'pull_request'
         run: |
           CREDENTIALS_FILE_PATH="${{ env.GOOGLE_APPLICATION_CREDENTIALS }}"
           CREDENTIALS_FILE_NAME=$(basename "$CREDENTIALS_FILE_PATH")
@@ -85,34 +94,32 @@ jobs:
           echo "GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS" >> $GITHUB_ENV        
           
       - name: Run notebook with papermill
+        if: github.event_name != 'pull_request'
         run: |
           for nb in part1_prerequisites part2_searching_basics part3_exploring_cohorts; do
+            # Create a new directory for each notebook
+            sudo mkdir -p "temp/${nb}"
+            
             docker run -d --name colab -v "$(pwd):/content" -e GOOGLE_APPLICATION_CREDENTIALS="${{ env.GOOGLE_APPLICATION_CREDENTIALS }}" imagingdatacommons/idc-testing-colab:latest
             docker exec -t colab /bin/bash -c "pip install papermill==2.4.0"
-            docker exec -t colab /bin/bash -c "set -o xtrace && set -o errexit && set -o pipefail && set -o nounset && set +o errexit && cd content/ && papermill --log-level='DEBUG' /content/notebooks/getting_started/${nb}.ipynb /content/test/outputs/${nb}_papermill_output.ipynb && set -o errexit && ls -A"
-            #docker exec -t colab /bin/bash -c "jupyter nbconvert --to html --ExtractOutputPreprocessor.enabled=False /content/test/outputs/output_${nb}.ipynb"
+            
+            # Change the working directory to the new directory
+            docker exec -t colab /bin/bash -c "set -o xtrace && set -o errexit && set -o pipefail && set -o nounset && set +o errexit && cd /content/temp/${nb} && papermill --log-level='DEBUG' /content/notebooks/getting_started/${nb}.ipynb /content/test/outputs/${nb}_papermill_output.ipynb && set -o errexit && ls -A"
+                     
             docker stop colab
             docker rm colab
+            sudo rm -r "temp/${nb}"
           done
-
-      # skip commit
-      #- name: Commit changes
-      #  if: ${{ github.event_name != 'pull_request' }}
-      #  uses: stefanzweifel/git-auto-commit-action@v4
-      #  with:
-      #    commit_message: 'Check colab env'
-      #    file_pattern: 'test/*.csv test/outputs/*.ipynb'
-      #    branch: 'master'
-      
-      #- name: Check output notebooks for errors 
-      #  run: | 
-      #    for nb in part1_prerequisites part2_searching_basics part3_exploring_cohorts; do
-      #      if grep -q '"name": "stderr"\|"status": "failed"' test/outputs/output_${nb}.ipynb; then
-      #        echo "Error messages found in the ${nb} notebook output:"
-      #        cat test/outputs/output_${nb}.ipynb
-      #        exit 1
-      #      else
-      #        echo "No errors found in the ${nb} notebook output."
-      #      fi
-      #    done
-      #    exit $EXIT_CODE
+        
+      - name: Create Pull Request to update the colab image metadata database
+        if: github.event_name != 'pull_request'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: Update colab images list
+          body:  Update colab-images-list.csv so that when a colab image is updated, we do not keep pulling colab docker image from gcp and pushing to dockerhub everytime
+          base:  master
+          branch: update-colab-images-list
+          add-paths: |
+            test/colab-images-list.csv
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
