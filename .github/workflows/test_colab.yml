@@ -108,7 +108,7 @@ jobs:
                      
             docker stop colab
             docker rm colab
-            sudo rm -r "temp/${nb}"
+            sudo rm -r "temp"
           done
         
       - name: Create Pull Request to update the colab image metadata database
