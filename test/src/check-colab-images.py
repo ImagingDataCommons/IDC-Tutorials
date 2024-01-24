@@ -48,7 +48,7 @@ def main():
             if existing_sha256 != current_sha256:
                 print("SHA256 digest has changed!")
                 # Perform actions if the digest has changed, like updating GitHub Actions.
-                df.to_csv('database.csv', index=False)  # Save the new DataFrame as 'database.csv'
+                df.to_csv('test/colab-images-list.csv', index=False)  # Save the new DataFrame as 'database.csv'
                 print("Updated the database CSV.")
                 result = True
             else:

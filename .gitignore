@@ -5,3 +5,6 @@ __pycache__/
 # Pycharm project files
 .idea
 .idea/*
+
+
+gha-creds-**.json
