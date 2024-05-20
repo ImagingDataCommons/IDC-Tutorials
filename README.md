@@ -3,10 +3,15 @@
 This repository contains tutorial materials (for the most part, as Python notebooks) that are developed to help you learn about [NCI Imaging Data Commons](https://imaging.datacommons.cancer.gov) and utilize it in your work.
 
 If this is the first time you hear about IDC, here are some highlights about what it has to offer:
-* **>45 TB of data**: IDC contains radiology, brightfield (H&E) and fluorescence slide microscopy images, along with image-derived data (annotations, segmentations, quantitative measurements) and accompanying clinical data
+
+* **>60 TB**: IDC contains radiology, brightfield (H&E) and fluorescence slide microscopy images, along with image-derived data (annotations, segmentations, quantitative measurements) and accompanying clinical data
+
 * **free**: all of the data in IDC is publicly available: no registration, no access requests
+
+* **commercial-friendly**: >95% of the data in IDC is covered by the permissive CC-BY license, which allows commercial reuse (small subset of data is covered by the CC-NC license); each file in IDC is tagged with the license to make it easier for you to understand and follow the rules
+
 * **cloud-based**: all of the data in IDC is available from both Google and AWS public buckets: fast and free to download, no out-of-cloud egress fees
-* **commercial-friendly**: most of the data in IDC is covered by the permissive CC-BY license, which allows commercial reuse (small subset of data is covered by the CC-NC license); each file in IDC is tagged with the license to make it easy for you to understand and follow the rules
+
 * **harmonized**: all of the images and image-derived data in IDC is harmonized into standard DICOM representation
 
 The tutorial notebooks are located in the [notebooks](https://github.com/ImagingDataCommons/IDC-Tutorials/tree/master/notebooks), and are organized in the following folders.
