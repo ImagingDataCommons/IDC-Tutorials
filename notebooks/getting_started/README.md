@@ -1,10 +1,6 @@
 # NCI Imaging Data Commons: Getting started tutorial series
 
-## Background
-
-**What is Imaging Data Commons (IDC)?**
-
-![whatis](https://raw.githubusercontent.com/ImagingDataCommons/IDC-Tutorials/master/notebooks/getting_started/what_is_idc.png)
+## What is Imaging Data Commons (IDC)?
 
 [NCI Imaging Data Commons (IDC)](https://datacommons.cancer.gov/repository/imaging-data-commons) is a cloud-based environment containing publicly available cancer imaging data co-located with the analysis and exploration tools and resources.
 
@@ -18,7 +14,18 @@
 
 * **harmonized**: all of the images and image-derived data in IDC is harmonized into standard DICOM representation
 
-**Why programmatic access to IDC content?**
+## IDC is more than the data it provides! 
+
+* Along with the data, IDC maintains a number of **tools** to help you search, visualize and download the data.
+* IDC is cloud-based, which makes it easier to **access cloud resources** for imaging research.
+* Cloud-based notebooks can help develop easily accessible demonstrations and make your analysese more easily **reproducible**.
+* Computations can be distributed to thousands of cloud-based virtual machines to support **large-scale analysis**.
+  
+Finally, we want IDC to be a place where members of the community can contribute to enrichment and **collaborative analysis** of the imaging data. If you have robust analysis tools that can be applied to images in IDC to make them more usable and accessible by others - please reach out to support@canceridc.dev! For an example of such secondary analysis, you can read [this forum post](https://discourse.canceridc.dev/t/new-in-idc-v18-totalsegmentator-segmentations-and-radiomics-features-for-nlst-cts/582) to learn how we used _TotalSegmentator_ to annotate CT images in the IDC NLST collection. We want your robust tools to help us improve IDC data further!
+
+<img src="https://raw.githubusercontent.com/ImagingDataCommons/IDC-Tutorials/master/notebooks/getting_started/what_is_idc.png" alt="whatis" width="800" class="center"/>
+
+## Why programmatic access to IDC content?
 
 [IDC Portal](https://imaging.datacommons.cancer.gov/explore/) is the interactive interface that allows exploring data available in IDC using a small subset of metadata attributes accompanying IDC data, visualize radiology and microscopy images and annotations, save cohorts (subsets of data) under user account based on the available metadata filters.
 
