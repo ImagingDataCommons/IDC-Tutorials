@@ -4,7 +4,7 @@
 
 **What is Imaging Data Commons (IDC)?**
 
-![whatis](https://raw.githubusercontent.com/ImagingDataCommons/IDC-Examples/master/notebooks/getting_started/what_is_idc.png)
+![whatis](https://raw.githubusercontent.com/ImagingDataCommons/IDC-Tutorials/master/notebooks/getting_started/what_is_idc.png)
 
 [NCI Imaging Data Commons (IDC)](https://datacommons.cancer.gov/repository/imaging-data-commons) is a cloud-based environment containing publicly available cancer imaging data co-located with the analysis and exploration tools and resources.
 
