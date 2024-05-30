@@ -67,8 +67,8 @@ If you prefer not to use Google Colab, the beginner level notebook can be execut
 
 ## Advanced tutorials
 
-1. [IDC Segmentation primer: using nnU-Net for segmenting abdominal organs in chest CT](https://github.com/ImagingDataCommons/IDC-Examples/blob/master/notebooks/IDC_segmentation_primer.ipynb)
-2. [Introduction to exploring clinical data in IDC](https://github.com/ImagingDataCommons/IDC-Examples/blob/master/notebooks/clinical_data_intro.ipynb)
+1. [Experimenting with MedSAM on IDC](https://github.com/ImagingDataCommons/IDC-Examples/blob/master/notebooks/analysis/MedSAM_with_IDC.ipynb)
+2. [Introduction to exploring clinical data in IDC](https://github.com/ImagingDataCommons/IDC-Examples/blob/master/notebooks/advanced_topics/clinical_data_intro.ipynb)
 
 ## Support and additional resources
 
