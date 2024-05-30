@@ -1,5 +1,7 @@
 # NCI Imaging Data Commons: Getting started tutorial series
 
+Not interested in the introductions and want to jump to the tutorial right away? [Basics of searching IDC data](https://github.com/ImagingDataCommons/IDC-Examples/blob/master/notebooks/getting_started/part2_searching_basics.ipynb) (beginner level)
+
 ## What is Imaging Data Commons (IDC)?
 
 [NCI Imaging Data Commons (IDC)](https://datacommons.cancer.gov/repository/imaging-data-commons) is a cloud-based environment containing publicly available cancer imaging data co-located with the analysis and exploration tools and resources.
@@ -50,7 +52,7 @@ If you prefer not to use Google Colab, the beginner level notebook can be execut
 
 ### Part 2: First steps with IDC (beginner)
 
-2. [Part 2: Basics of searching IDC data](https://github.com/ImagingDataCommons/IDC-Examples/blob/master/notebooks/getting_started/part2_searching_basics.ipynb) (beginner level)
+[Part 2: Basics of searching IDC data](https://github.com/ImagingDataCommons/IDC-Examples/blob/master/notebooks/getting_started/part2_searching_basics.ipynb) (beginner level)
 
   This tutorial will introduce you to the basic capabilities of [`idc-index` python package](https://github.com/ImagingDataCommons/idc-index). In this tutorial we will learn how `idc-index` can help you to:
   * download files corresponding to the collections/patients/images you selected in the IDC Portal
