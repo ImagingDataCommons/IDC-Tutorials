@@ -4,7 +4,7 @@
 
 [NCI Imaging Data Commons (IDC)](https://datacommons.cancer.gov/repository/imaging-data-commons) is a cloud-based environment containing publicly available cancer imaging data co-located with the analysis and exploration tools and resources.
 
-* **>60 TB**: IDC contains radiology, brightfield (H&E) and fluorescence slide microscopy images, along with image-derived data (annotations, segmentations, quantitative measurements) and accompanying clinical data
+* **>65 TB**: IDC contains radiology, brightfield (H&E) and fluorescence slide microscopy images, along with image-derived data (annotations, segmentations, quantitative measurements) and accompanying clinical data
 
 * **free**: all of the data in IDC is publicly available: no registration, no access requests
 
