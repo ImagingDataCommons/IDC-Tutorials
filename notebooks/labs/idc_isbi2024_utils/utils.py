@@ -21,7 +21,7 @@ def _get_reference_class_label(slide_metadata: pd.DataFrame) -> str:
         return tissue_type
     else: 
         return slide_metadata['cancer_subtype']
-
+    
 
 def create_slides_metadata(bq_results_df: pd.DataFrame, local_slides_dir: str) -> Dict[str, Any]: 
     """
@@ -45,6 +45,15 @@ def create_slides_metadata(bq_results_df: pd.DataFrame, local_slides_dir: str) -
         
         if not image_id in slides_metadata:
             slides_metadata[image_id] = slide_metadata
+            
+            # rename tissue type
+            if slides_metadata[image_id]['tissue_type'] == 'Normal':
+                slides_metadata[image_id]['tissue_type'] = 'normal'
+            elif slides_metadata[image_id]['tissue_type'] == 'Neoplasm, Primary':
+                slides_metadata[image_id]['tissue_type'] = 'tumor'
+            else: 
+                slides_metadata[image_id]['tissue_type'] = 'other'
+
             local_path = os.path.join(local_slides_dir, image_id)
             slides_metadata[image_id]['local_path'] = local_path
             slides_metadata[image_id]['reference_class_label'] = _get_reference_class_label(slide_metadata)
