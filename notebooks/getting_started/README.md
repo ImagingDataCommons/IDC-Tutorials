@@ -66,6 +66,9 @@ If you prefer not to use Google Colab, the beginner level notebook can be execut
 [Part 3: Working with the cohorts: visualization, download, licenses](https://github.com/ImagingDataCommons/IDC-Examples/blob/master/notebooks/getting_started/part3_exploring_cohorts.ipynb) (intermediate level)
    In this tutorial series we will practice the use of Google BigQuery - a cloud-based query system designed to operate on large tabular datasets. `idc-index` gives you access to a small subset of the metadata accompanying the files available from IDC. With BigQuery you can search all of the metadata, gaining more flexibility in defining cohorts.
 
+### Other topics
+
+* [Exploring clinical data](https://github.com/ImagingDataCommons/IDC-Tutorials/blob/master/notebooks/getting_started/exploring_clinical_data.ipynb) (beginner level): many collections in IDC are accompanied by collection-specific metadata describing characteristics of the patient, disease, therapy etc. In IDC we refer to those broadly as "clinical data". In this tutorial you will learn basics about how to navigate IDC clinical data, and how to find what clinical data, if any, is available for a specific IDC collection.
 
 ## Advanced tutorials
 
