@@ -2,9 +2,9 @@
 
 This repository contains tutorial materials (for the most part, as Python notebooks) that are developed to help you learn about [NCI Imaging Data Commons](https://imaging.datacommons.cancer.gov) and utilize it in your work.
 
-If this is the first time you hear about IDC, here are some highlights about what it has to offer:
+If this is the first time you hear about IDC, you may want to check out our [Getting Started documentationpage](https://learn.canceridc.dev/getting-started-with-idc). Here are some highlights about what IDC has to offer:
 
-* **>60 TB**: IDC contains radiology, brightfield (H&E) and fluorescence slide microscopy images, along with image-derived data (annotations, segmentations, quantitative measurements) and accompanying clinical data
+* **>65 TB of data**: IDC contains radiology, brightfield (H&E) and fluorescence slide microscopy images, along with image-derived data (annotations, segmentations, quantitative measurements) and accompanying clinical data
 
 * **free**: all of the data in IDC is publicly available: no registration, no access requests
 
