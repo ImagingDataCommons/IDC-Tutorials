@@ -29,7 +29,7 @@ The tutorial notebooks are located in the [notebooks](https://github.com/Imaging
 Notebooks in this folder focus on topics that will require understanding of the basics, and aim to address more narrow use cases of IDC usage. 
 
 * [Searching DICOM private tags](https://github.com/ImagingDataCommons/IDC-Tutorials/blob/master/notebooks/advanced_topics/dicom_private_tags_intro.ipynb): all of DICOM attributes for the imaging data in IDC are searchable using BigQuery. DICOM private tags often contain critical information, such as diffusion b-values, but are a bit more tricky to access from BigQuery. In this tutorial you will learn how to accomplish this.
-* [Using BigQuery for searching IDC clinical data](https://github.com/ImagingDataCommons/IDC-Tutorials/blob/master/notebooks/advanced_topics/clinical_data_intro.ipynb): BigQuery is an alternative to `idc-index` and `duckdb` for searching clinical data. This tutorial demonstrates more capabilities compared to the introductory clinical data usage tutorial.
+* [Working with IDC clinical data](https://github.com/ImagingDataCommons/IDC-Tutorials/blob/master/notebooks/advanced_topics/clinical_data_intro.ipynb): this tutorial will help you become familiar with how clinical and other tabular data accompanying images in IDC is organized, and how you can use it to build cohorts.
 
 ## [`viewers_deployment`](https://github.com/ImagingDataCommons/IDC-Tutorials/tree/master/notebooks/viewers_deployment)
 
