@@ -30,6 +30,7 @@ Notebooks in this folder focus on topics that will require understanding of the 
 
 * [Searching DICOM private tags](https://github.com/ImagingDataCommons/IDC-Tutorials/blob/master/notebooks/advanced_topics/dicom_private_tags_intro.ipynb): all of DICOM attributes for the imaging data in IDC are searchable using BigQuery. DICOM private tags often contain critical information, such as diffusion b-values, but are a bit more tricky to access from BigQuery. In this tutorial you will learn how to accomplish this.
 * [Working with IDC clinical data](https://github.com/ImagingDataCommons/IDC-Tutorials/blob/master/notebooks/advanced_topics/clinical_data_intro.ipynb): this tutorial will help you become familiar with how clinical and other tabular data accompanying images in IDC is organized, and how you can use it to build cohorts.
+* [Direct access to tags/frames from GCS/AWS buckets](https://github.com/ImagingDataCommons/IDC-Tutorials/blob/master/notebooks/advanced_topics/gcs_aws_direct_access.ipynb): learn how to access individual frames or tags of large DICOM files from the bucket without having to download the entire file (this notebook accompanies documentation article here: https://learn.canceridc.dev/data/downloading-data/direct-loading)
 
 ## [`viewers_deployment`](https://github.com/ImagingDataCommons/IDC-Tutorials/tree/master/notebooks/viewers_deployment)
 
