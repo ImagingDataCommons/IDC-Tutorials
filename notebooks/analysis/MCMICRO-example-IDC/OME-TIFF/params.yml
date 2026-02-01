@@ -1,0 +1,5 @@
+workflow:
+  start-at: segmentation
+  stop-at: quantification
+  segmentation: ilastik
+  segmentation-channel: 1
