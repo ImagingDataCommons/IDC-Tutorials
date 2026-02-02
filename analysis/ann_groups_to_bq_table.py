@@ -23,7 +23,7 @@ SELECT
     dcm_all.gcs_url
 FROM 
     `bigquery-public-data.idc_current.dicom_all` AS dcm_all
-WHERE Modality = 'ANN' AND collection_id LIKE '%bonemarrowwsi%'
+WHERE Modality = 'ANN'
 '''
 MAX_WORKERS = 8  
 BQ_DATASET = 'idc_pathology'
