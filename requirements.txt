@@ -1,0 +1,44 @@
+# IDC-Tutorials Dependencies
+# This file documents the Python packages used across the tutorial notebooks.
+# Notebooks are designed to run in Google Colab where many packages are pre-installed.
+# Install with: pip install -r requirements.txt
+
+# Core IDC access (required for most notebooks)
+idc-index>=0.11.0
+
+# Data handling
+pandas
+numpy
+
+# DICOM processing
+pydicom
+highdicom
+
+# Visualization
+matplotlib
+seaborn
+itk
+itkwidgets>=1.0a32
+
+# Cloud access
+google-cloud-bigquery
+pyarrow
+boto3
+smart-open
+s3fs
+
+# Digital pathology / slide microscopy
+wsidicom
+ez-wsi-dicomweb
+
+# Interactive exploration
+hiplot
+ipywidgets
+
+# HTTP
+requests
+
+# Notebook execution (for testing)
+jupyter
+nbconvert
+papermill
