@@ -8,3 +8,9 @@ __pycache__/
 
 
 gha-creds-**.json
+
+# Downloaded DICOM files
+*.dcm
+
+# Test artifacts
+rms_test/
