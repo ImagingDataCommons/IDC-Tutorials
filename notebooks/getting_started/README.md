@@ -82,7 +82,7 @@ If you prefer not to use Google Colab, the beginner level notebook can be execut
 
 ## Acknowledgments
 
-Imaging Data Commons has been funded in whole or in part with Federal funds from the National Cancer Institute, National Institutes of Health, under Task Order No. HHSN26110071 under Contract No. HHSN261201500003l.
+Imaging Data Commons has been funded in whole or in part with Federal funds from the National Cancer Institute, National Institutes of Health, under Task Order No. HHSN26110071 under Contract No. HHSN261201500003I.
 
 If you use IDC in your research, please cite the following publication:
 
