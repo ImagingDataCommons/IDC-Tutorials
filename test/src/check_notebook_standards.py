@@ -4,6 +4,7 @@ Check that all notebooks (excluding deprecated/) follow IDC-Tutorials standards:
   2. Include a "## Acknowledgments" section
   3. Reference the IDC-Tutorials repository for additional tutorials
   4. Include an "Updated: <Month> <Year>" field
+  5. Include a correct Colab badge link pointing to the notebook's own path
 """
 
 import json
@@ -28,6 +29,11 @@ UPDATED_RE = re.compile(rf"Updated:\s*{MONTH_PATTERN}\s+\d{{4}}")
 
 IDC_TUTORIALS_URL = "github.com/ImagingDataCommons/IDC-Tutorials"
 
+COLAB_PREFIX = "https://colab.research.google.com/github/ImagingDataCommons/IDC-Tutorials/blob/master/"
+COLAB_LINK_RE = re.compile(
+    r'https://colab\.research\.google\.com/github/[^">\s]+'
+)
+
 
 def get_markdown_sources(notebook_path):
     """Return a list of concatenated source strings for each markdown cell."""
@@ -48,6 +54,7 @@ def get_markdown_sources(notebook_path):
 def check_notebook(notebook_path):
     """Check a single notebook for required standards. Returns list of issues."""
     issues = []
+    rel_path = notebook_path.relative_to(NOTEBOOKS_DIR.parent)
     cells = get_markdown_sources(notebook_path)
     all_text = "\n".join(cells)
 
@@ -68,6 +75,21 @@ def check_notebook(notebook_path):
     # Check 4: "Updated: <Month> <Year>" field
     if not UPDATED_RE.search(all_text):
         issues.append("Missing 'Updated: <Month> <Year>' field (e.g., 'Updated: Feb 2026')")
+
+    # Check 5: Colab badge link exists and points to correct path
+    expected_colab_url = COLAB_PREFIX + str(rel_path)
+    colab_links = COLAB_LINK_RE.findall(all_text)
+    if not colab_links:
+        issues.append("Missing Colab badge link")
+    else:
+        # Check the first colab link (the badge) points to this notebook
+        badge_link = colab_links[0]
+        if badge_link != expected_colab_url:
+            issues.append(
+                f"Colab badge link mismatch:\n"
+                f"        found:    {badge_link}\n"
+                f"        expected: {expected_colab_url}"
+            )
 
     return issues
 
