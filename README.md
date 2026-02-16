@@ -19,10 +19,12 @@ The tutorial notebooks are located in the [notebooks](https://github.com/Imaging
 ## Recommended Learning Paths
 
 **Beginner (no GCP account needed):**
+
 1. [Basics of using IDC data programmatically](https://github.com/ImagingDataCommons/IDC-Tutorials/blob/master/notebooks/getting_started/part2_searching_basics.ipynb) - start here!
 2. [Searching clinical data](https://github.com/ImagingDataCommons/IDC-Tutorials/blob/master/notebooks/getting_started/exploring_clinical_data.ipynb)
 
 **Intermediate (GCP account needed):**
+
 3. [BigQuery prerequisites and setup](https://github.com/ImagingDataCommons/IDC-Tutorials/blob/master/notebooks/getting_started/part1_prerequisites.ipynb) - set up Google Cloud for BigQuery access
 4. [Advanced searching using BigQuery](https://github.com/ImagingDataCommons/IDC-Tutorials/blob/master/notebooks/getting_started/part3_exploring_cohorts.ipynb)
 5. [Working with IDC clinical data](https://github.com/ImagingDataCommons/IDC-Tutorials/blob/master/notebooks/advanced_topics/clinical_data_intro.ipynb)
