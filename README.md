@@ -79,6 +79,7 @@ This folder is dedicated to the notebooks focused on the digital pathology (path
 * [Getting started with pathology images in IDC](https://github.com/ImagingDataCommons/IDC-Tutorials/blob/master/notebooks/pathomics/getting_started_with_digital_pathology.ipynb): all of the pathology images in IDC are in DICOM Slide Microscopy format; this notebook will help you get started with using this representation and also searching IDC pathology images.
 * [Exploring IDC slide microscopy images metadata](https://github.com/ImagingDataCommons/IDC-Tutorials/blob/master/notebooks/pathomics/slide_microscopy_metadata_search.ipynb): introduction to the key metadata accompanying IDC slide microscopy images that can be used for subsetting data and building cohorts.
 * [Working with DICOM Microscopy Bulk Simple annotations](https://github.com/ImagingDataCommons/IDC-Tutorials/blob/master/notebooks/pathomics/microscopy_dicom_ann_intro.ipynb): introduction to working with bulk annotations encoded in DICOM using the example of nuclei annotations.
+* [Working with DICOM Segmentations](https://github.com/ImagingDataCommons/IDC-Tutorials/blob/master/notebooks/pathomics/microscopy_dicom_seg_intro.ipynb): introduction to working with segmentations encoded in DICOM using the example of nuclei segmentations.
 
 ## [`analysis`](https://github.com/ImagingDataCommons/IDC-Tutorials/tree/master/notebooks/analysis)
 
