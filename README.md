@@ -16,6 +16,8 @@ If this is the first time you hear about IDC, you may want to check out our [Get
 
 The tutorial notebooks are located in the [notebooks](https://github.com/ImagingDataCommons/IDC-Tutorials/tree/master/notebooks), and are organized in the following folders.
 
+Zenodo permanent citeable record: https://zenodo.org/records/22691908.
+
 ## Recommended Learning Paths
 
 **Beginner (no GCP account needed):**
